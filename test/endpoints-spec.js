@@ -107,7 +107,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get('/404/url')
+      fakeEndpoint.get()
         .send()
         .then(success, fail);
     });
