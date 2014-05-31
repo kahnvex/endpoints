@@ -16,7 +16,7 @@ npm install endpointsjs
 Use Endpoints to create an endpoint pattern, then call methods on that pattern to get promises back. Simple as that.
 
 ```javascript
-var Endpoints = require('endpoints');
+var Endpoints = require('endpointsjs');
 
 var promiseCallback = function(data) {
   console.log(data);
