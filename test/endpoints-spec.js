@@ -49,6 +49,25 @@ describe('endpoints', function() {
     });
   });
 
+  describe('unsafe operations', function() {
+    var fakeEndpoint;
+
+    beforeEach(function() {
+      var checkResponse = function() {};
+
+      fakeEndpoint = new Endpoints.GetPost({
+        url: '/base/test/data-1-fixture.json'
+      });
+
+      fakeEndpoint.post({data: {my: 'data'}})
+      .then(checkResponse, checkResponse);
+    });
+
+    it('sets the endpoints data property on POST', function() {
+      fakeEndpoint.data.should.have.property('my', 'data');
+    });
+  });
+
   describe('create a custom endpoint pattern', function() {
     var customEndpoint;
 

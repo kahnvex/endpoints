@@ -9,12 +9,17 @@ var httpMethods = {};
 
 var methodHelper = function(method) {
 
+  // TODO: Factor logic into helper class(es)
+  // Things here are going to get crazy
   var httpMethod = function(options) {
     var deferred = Q.defer();
 
     var resolve = function(data) {
-      this.data = data;
-      deferred.resolve(this, data);
+      if(method === 'GET') {
+        this.data = data;
+      }
+
+      deferred.resolve(this);
     };
 
     var reject = function(error) {
@@ -22,6 +27,18 @@ var methodHelper = function(method) {
     };
 
     options = $.extend({}, this.ajaxOptions, options);
+
+    if(method === 'POST' || method === 'PUT') {
+
+      /* If the user specified data to send in the call to put/post use that.
+       * Otherwise use the data stored on the endpoint's data property
+       */
+      options.data = options.data || this.data;
+
+      /* Store data sent in the ajax call in the endpoints data property.
+       */
+      this.data = options.data;
+    }
 
     qjax.methodFactory(method)(options)
     .then(resolve.bind(this), reject.bind(this));
