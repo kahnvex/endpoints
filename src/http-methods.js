@@ -40,6 +40,10 @@ var methodHelper = function(method) {
       this.data = options.data;
     }
 
+    if(method === 'DELETE') {
+      this.data = {};
+    }
+
     qjax.methodFactory(method)(options)
     .then(resolve.bind(this), reject.bind(this));
 
