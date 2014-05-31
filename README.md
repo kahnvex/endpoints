@@ -37,7 +37,7 @@ myEndpoint.post({data: {my: 'data'}})
 
 myOtherEndpoint.get()
 .then(promiseCallback)
-.then(myOtherEndpoint.delete)
+.then(myOtherEndpoint.delete);
 ```
 
 Underneath Endpoints is using [jQuery.ajax](http://api.jquery.com/jquery.ajax/), so the options hash sent to
