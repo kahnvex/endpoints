@@ -1,5 +1,8 @@
+'use strict';
+
 var $ = require('jquery');
 var qjax = require('qjax');
+
 
 var httpMethods = {};
 
