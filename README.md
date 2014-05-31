@@ -71,6 +71,7 @@ Here is a list of them:
 * APIs are stateless
 * API endpoints return a resources representation after GET, POST, or PUT
 * Content-Type is specified in the response
+* Your API makes JSON and/or XML are first class citizens
 
 If your API does not closely follow REST, Endpoints probably isn't right for you.
 
