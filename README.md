@@ -52,15 +52,6 @@ myOtherEndpoint.post()
 .done();
 ```
 
-### Available Endpoint Patterns
-
-```
-GetPost [GET, POST, OPTIONS]
-GetPutDelete [GET, PUT, DELETE, OPTIONS]
-GetPut [GET, PUT, OPTIONS]
-Custom options.methodList
-```
-
 ### Is Endpoints Right for my API?
 
 Endpoints makes assumptions about APIs and Services. Most of these assumptions
