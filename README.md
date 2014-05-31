@@ -63,7 +63,7 @@ GetPut [GET, PUT, OPTIONS]
 Custom options.methodList
 ```
 
-### Is Endpoints for Me?
+### Is Endpoints Right for my API?
 
 Endpoints makes assumptions about APIs and Services. Most of these assumptions
 are derived from the [REST style architecture](http://www.restapitutorial.com/).
