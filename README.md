@@ -43,7 +43,7 @@ myOtherEndpoint.get()
 Underneath Endpoints is using [jQuery.ajax](http://api.jquery.com/jquery.ajax/), so the options hash sent to
 Endpoints.Whatever will take any valid [jQuery.ajax](http://api.jquery.com/jquery.ajax/) option.
 
-## Available Endpoint Patters
+### Available Endpoint Patterns
 
 ```
 GetPost [GET, POST, OPTIONS]
