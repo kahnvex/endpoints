@@ -18,22 +18,32 @@ Use Endpoints to create an endpoint pattern, then call methods on that pattern t
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var promiseCallback = function(data) {
-  console.log(data);
-};
-
 var myEndpoint = new Endpoints.GetPost({
   url: '/some/url',
   dataType: 'json'
 });
+
+var promiseCallback = function(data) {
+  console.log(data);
+};
+
+myEndpoint.post({data: {my: 'data'}})
+.then(promiseCallback);
+```
+
+It is also possible to create a custom endpoint pattern.
+
+```javascript
+var Endpoints = require('endpointsjs');
 
 var myOtherEndpoint = new Endpoints.Custom({
   url: '/some/other/url',
   methodList: ['OPTIONS', 'GET', 'DELETE']
 });
 
-myEndpoint.post({data: {my: 'data'}})
-.then(promiseCallback);
+var promiseCallback = function(data) {
+  console.log(data);
+};
 
 myOtherEndpoint.get()
 .then(promiseCallback)
