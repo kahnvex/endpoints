@@ -29,7 +29,6 @@ var promiseCallback = function(data) {
 
 myEndpoint.post({data: {my: 'data'}})
 .then(promiseCallback);
-
 ```
 
 It is also possible to create a custom endpoint pattern.
