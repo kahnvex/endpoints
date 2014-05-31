@@ -21,7 +21,7 @@ var Endpoints = require('endpointsjs');
 var myEndpoint = new Endpoints.create('/some/url')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
-});
+
 
 var promiseCallback = function(endpoint) {
   console.log(endpoint.data);
@@ -29,8 +29,8 @@ var promiseCallback = function(endpoint) {
 };
 
 myEndpoint.get()
-.send()
-.then(promiseCallback);
+  .send()
+  .then(promiseCallback);
 ```
 
 Sending data to the server is also easy
@@ -47,9 +47,9 @@ var promiseCallback = function(endpoint) {
 };
 
 myOtherEndpoint.post()
-.send()
-.then(promiseCallback)
-.done();
+  .send()
+  .then(promiseCallback)
+  .done();
 ```
 
 ### Is Endpoints Right for my API?
