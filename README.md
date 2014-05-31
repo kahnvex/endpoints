@@ -69,7 +69,7 @@ Endpoints makes assumptions about APIs and Services. Most of these assumptions
 are derived from the [REST style architecture](http://www.restapitutorial.com/).
 Here is a list of them:
 * APIs are stateless
-* API endpoints return a resources representation after GET, POST, or PUT
+* API endpoints return a resource representation after GET, POST, or PUT
 * Content-Type is specified in the response
 * Your API makes JSON and/or XML first class citizens
 
