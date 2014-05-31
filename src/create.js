@@ -12,6 +12,10 @@ function create(url) {
 
 create.prototype.headers = {};
 
+create.prototype.url = function(url) {
+  this.url = url;
+};
+
 create.prototype.methods = function(methodList){
   _.each(methodList, function(method){
     this[method] = _.bind(httpMethods[method], this);

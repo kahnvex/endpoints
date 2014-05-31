@@ -13,15 +13,15 @@ npm install endpointsjs
 
 ## Usage
 
-Use Endpoints to create an endpoint pattern, then call methods on that pattern to get promises back. Simple as that.
+Use Endpoints to create an endpoint pattern, then call methods on that pattern and get promises back. No pyramid of doom. Code over configuration.
 
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myEndpoint = new Endpoints.GetPost({
-  url: '/some/url',
-  dataType: 'json'
-});
+var myEndpoint = new Endpoints.create('/some/url')
+  .header('Content-Type', 'application/json')
+  .methods(['get', 'post']);
+
 
 var promiseCallback = function(endpoint) {
   console.log(endpoint.data);
@@ -29,38 +29,27 @@ var promiseCallback = function(endpoint) {
 };
 
 myEndpoint.get()
-.then(promiseCallback);
+  .send()
+  .then(promiseCallback);
 ```
 
-It is also possible to create a custom endpoint pattern.
+Sending data to the server is also easy
 
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myOtherEndpoint = new Endpoints.Custom({
-  url: '/some/other/url',
-  methodList: ['options', 'post', 'delete']
-});
+var myOtherEndpoint = new Endpoints.create('/some/other/url')
+  .methods(['options', 'post', 'delete'])
+  .data({myData: 123});
 
 var promiseCallback = function(endpoint) {
   console.log(endpoint.data);
 };
 
-myOtherEndpoint.post({data: {myData: 123}})
-.then(promiseCallback)
-.then(myOtherEndpoint.delete);
-```
-
-Underneath Endpoints is using [jQuery.ajax](http://api.jquery.com/jquery.ajax/), so the options hash sent to
-Endpoints.Whatever will take any valid [jQuery.ajax](http://api.jquery.com/jquery.ajax/) option.
-
-### Available Endpoint Patterns
-
-```
-GetPost [GET, POST, OPTIONS]
-GetPutDelete [GET, PUT, DELETE, OPTIONS]
-GetPut [GET, PUT, OPTIONS]
-Custom options.methodList
+myOtherEndpoint.post()
+  .send()
+  .then(promiseCallback)
+  .done();
 ```
 
 ### Is Endpoints Right for my API?

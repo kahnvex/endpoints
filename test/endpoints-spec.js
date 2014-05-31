@@ -48,11 +48,9 @@ describe('endpoints', function() {
     var customEndpoint;
 
     beforeEach(function() {
-
       customEndpoint = Endpoints.create('/')
         .methods(['get', 'patch', 'delete'])
         .header('Content-Type', 'application/json');
-
     });
 
     it('generates the correct methods', function() {

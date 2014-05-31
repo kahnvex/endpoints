@@ -1,6 +1,6 @@
 'use strict';
 
-var create = require('./custom');
+var create = require('./create');
 
 var Endpoints = {};
 
