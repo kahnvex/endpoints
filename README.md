@@ -3,7 +3,7 @@ Endpoints
 
 [![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
 
-Simple helper library for your service clients.
+Simple helper library for your REST service clients.
 
 ## Install it
 
@@ -62,3 +62,12 @@ GetPutDelete [GET, PUT, DELETE, OPTIONS]
 GetPut [GET, PUT, OPTIONS]
 Custom options.methodList
 ```
+
+Endpoints makes assumptions about APIs and Services. Most of these assumptions
+are derived from the [REST style architecture](http://www.restapitutorial.com/).
+Here is a list of them:
+* Resources are mapped to by URIs, not query parameters
+* An APIs endpoints return a resources representation after GET, POST, or PUTS
+* Data formatting information is returned in the response
+
+If you are using a non-RESTful API, Endpoints probably isn't the right choice.
