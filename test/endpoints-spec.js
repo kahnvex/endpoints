@@ -18,14 +18,16 @@ describe('endpoints', function() {
 
   describe('using an endpoint pattern', function() {
     var response;
+    var fakeEndpoint;
+    var returnedEndpoint;
 
     beforeEach(function(done) {
-      var fakeEndpoint = new Endpoints.GetPost({
+      fakeEndpoint = new Endpoints.GetPost({
         url: '/base/test/data-1-fixture.json'
       });
 
-      var checkResponse = function(_response) {
-        response = _response;
+      var checkResponse = function(_endpoint) {
+        returnedEndpoint = _endpoint;
         done();
       };
 
@@ -38,8 +40,12 @@ describe('endpoints', function() {
       .then(checkResponse, fail);
     });
 
-    it('promise resolves when the response is received', function() {
-      response.should.have.property('data', 'so much data');
+    it('places data in the data property of the pattern', function() {
+      fakeEndpoint.data.should.have.property('data', 'so much data');
+    });
+
+    it('returns the endpoint when the promise is resolved', function() {
+      returnedEndpoint.should.be.exactly(fakeEndpoint);
     });
   });
 
@@ -62,14 +68,14 @@ describe('endpoints', function() {
 
   describe('override endpoint settings', function() {
     var response;
+    var fakeEndpoint;
 
     beforeEach(function(done) {
-      var fakeEndpoint = new Endpoints.GetPost({
+      fakeEndpoint = new Endpoints.GetPost({
         url: '/base/test/data-1-fixture.json'
       });
 
-      var checkResponse = function(_response) {
-        response = _response;
+      var checkResponse = function(_endpoint) {
         done();
       };
 
@@ -83,7 +89,7 @@ describe('endpoints', function() {
     });
 
     it('will override endpoint settings', function() {
-      response.should.have.property('GET', 'all the things');
+      fakeEndpoint.data.should.have.property('GET', 'all the things');
     });
   });
 });
