@@ -23,6 +23,12 @@ MethodFactory.prototype.header = function(headerKey, headerValue) {
   return this;
 };
 
+MethodFactory.prototype.data = function(data) {
+  this.endpoint.data = data;
+
+  return this;
+};
+
 MethodFactory.prototype.send = function() {
   var handleResponse = _.bind(this._handleResponse, this);
   var reject = _.bind(this._reject, this);
@@ -53,14 +59,14 @@ MethodFactory.prototype.createRequestObject = function(url) {
  *   - and given the xhr response
  * - else the response body is parsed into the data proerty of the endpoint
  */
-MethodFactory.prototype._handleResponse = function(ressponse) {
-  if(ressponse.xhr.status > 299) {
-    this.deferred.reject(ressponse.xhr);
+MethodFactory.prototype._handleResponse = function(response) {
+  if(response.xhr.status > 299) {
+    this.deferred.reject(response.xhr);
     return;
   }
 
   if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
-    this.endpoint.data = JSON.parse(ressponse.xhr.response);
+    this.endpoint.data = JSON.parse(response.xhr.response);
   }
 
   this.deferred.resolve(this.endpoint);

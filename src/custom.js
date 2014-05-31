@@ -20,6 +20,12 @@ create.prototype.methods = function(methodList){
   return this;
 };
 
+create.prototype.data = function(data) {
+  this.data = data;
+
+  return this;
+};
+
 create.prototype.header = function(headerKey, headerValue) {
   this.headers[headerKey] = headerValue;
 

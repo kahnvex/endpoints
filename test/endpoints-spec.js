@@ -26,7 +26,7 @@ describe('endpoints', function() {
       };
 
       var fail = function(_response) {
-        response = _response;
+        true.should.be.false;
         done();
       };
 
@@ -70,22 +70,61 @@ describe('endpoints', function() {
       fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
         .methods(['get']);
 
-      var checkResponse = function(_endpoint) {
-        done();
-      };
-
-      var fail = function(_response) {
-        response = _response;
+      var complete = function(_endpoint) {
         done();
       };
 
       fakeEndpoint.get('/base/test/data-2-fixture.json')
         .send()
-        .then(checkResponse, fail);
+        .then(complete, complete);
     });
 
     it('will override endpoint settings', function() {
       fakeEndpoint.data.should.have.property('GET', 'all the things');
+    });
+  });
+
+  describe('posting and putting data', function() {
+    var fakeEndpoint;
+
+    beforeEach(function(done) {
+      fakeEndpoint = Endpoints.create('/fake/url')
+        .methods(['post', 'put']);
+
+      var complete = function() {
+        done();
+      };
+
+      fakeEndpoint.post()
+        .data({some: 'data'})
+        .send()
+        .then(complete, complete);
+    });
+
+    it('will override endpoint settings', function() {
+      fakeEndpoint.data.should.have.property('some', 'data');
+    });
+  });
+
+  describe('posting and putting data', function() {
+    var fakeEndpoint;
+
+    beforeEach(function(done) {
+      fakeEndpoint = Endpoints.create('/fake/url')
+        .data({more: 'data'})
+        .methods(['post', 'put']);
+
+      var complete = function() {
+        done();
+      };
+
+      fakeEndpoint.post()
+        .send()
+        .then(complete, complete);
+    });
+
+    it('will override endpoint settings', function() {
+      fakeEndpoint.data.should.have.property('more', 'data');
     });
   });
 
