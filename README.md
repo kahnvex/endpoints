@@ -23,11 +23,12 @@ var myEndpoint = new Endpoints.GetPost({
   dataType: 'json'
 });
 
-var promiseCallback = function(data) {
-  console.log(data);
+var promiseCallback = function(endpoint) {
+  console.log(endpoint.data);
+  assert(endpoint === myEndpoint);
 };
 
-myEndpoint.post({data: {my: 'data'}})
+myEndpoint.get()
 .then(promiseCallback);
 ```
 
@@ -38,14 +39,14 @@ var Endpoints = require('endpointsjs');
 
 var myOtherEndpoint = new Endpoints.Custom({
   url: '/some/other/url',
-  methodList: ['options', 'get', 'delete']
+  methodList: ['options', 'post', 'delete']
 });
 
-var promiseCallback = function(data) {
+var promiseCallback = function(endpoint) {
   console.log(data);
 };
 
-myOtherEndpoint.get()
+myOtherEndpoint.post({data: {myData: 123}})
 .then(promiseCallback)
 .then(myOtherEndpoint.delete);
 ```
