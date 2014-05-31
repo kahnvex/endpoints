@@ -1,18 +1,29 @@
 'use strict';
 
 var httpMethods = require('./http-methods');
+var _ = require('lodash');
 
 
-function Custom(options) {
-  var index;
-  var methodList = options.methodList;
+function create(url) {
+  this.url = url;
 
-  for(index in methodList) {
-    this[methodList[index]] = httpMethods[methodList[index]].bind(this);
-  }
-
-  this.ajaxOptions = options;
+  return this;
 }
 
+create.prototype.headers = {};
 
-module.exports = Custom;
+create.prototype.methods = function(methodList){
+  _.each(methodList, function(method){
+    this[method] = _.bind(httpMethods[method], this);
+  }, this);
+
+  return this;
+};
+
+create.prototype.header = function(headerKey, headerValue) {
+  this.headers[headerKey] = headerValue;
+
+  return this;
+};
+
+module.exports = create;
