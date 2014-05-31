@@ -31,6 +31,7 @@ describe('endpoints', function() {
       };
 
       fakeEndpoint.get()
+        .send()
         .then(checkResponse, fail);
     });
 
@@ -79,6 +80,7 @@ describe('endpoints', function() {
       };
 
       fakeEndpoint.get('/base/test/data-2-fixture.json')
+        .send()
         .then(checkResponse, fail);
     });
 
@@ -106,6 +108,7 @@ describe('endpoints', function() {
       };
 
       fakeEndpoint.get('/404/url')
+        .send()
         .then(success, fail);
     });
 

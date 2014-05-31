@@ -10,20 +10,32 @@ function MethodFactory(url, method, endpoint) {
   this.method = method;
   this.endpoint = endpoint;
 
-  this.init();
+  return this.init();
 }
 
 MethodFactory.prototype.init = function() {
-  var url = this.url || this.endpoint.url;
-  var handleResponse = _.bind(this.handleResponse, this);
-  var reject = _.bind(this.reject, this);
-  var requestObject = this.createRequestObject(url);
+  this.url = this.url || this.endpoint.url;
+  this.requestObject = this.createRequestObject(this.url);
 
   this.deferred = Q.defer();
 
-  agentQ.end(requestObject)
+  return this;
+};
+
+MethodFactory.prototype.header = function(headerKey, headerValue) {
+  this.requestObject.set(headerKey, headerValue);
+  return this;
+};
+
+MethodFactory.prototype.send = function() {
+  var handleResponse = _.bind(this._handleResponse, this);
+  var reject = _.bind(this._reject, this);
+
+  agentQ.end(this.requestObject)
   .then(handleResponse, reject)
   .done();
+
+  return this.deferred.promise;
 };
 
 MethodFactory.prototype.createRequestObject = function(url) {
@@ -45,7 +57,7 @@ MethodFactory.prototype.createRequestObject = function(url) {
  *   - and given the xhr response
  * - else the response body is parsed into the data proerty of the endpoint
  */
-MethodFactory.prototype.handleResponse = function(res) {
+MethodFactory.prototype._handleResponse = function(res) {
   if(res.xhr.status > 299) {
     this.deferred.reject(res.xhr);
     return;
@@ -58,24 +70,16 @@ MethodFactory.prototype.handleResponse = function(res) {
   this.deferred.resolve(this.endpoint);
 };
 
-MethodFactory.prototype.reject = function(error) {
+MethodFactory.prototype._reject = function(error) {
   this.deferred.reject(error);
-};
-
-MethodFactory.prototype.promise = function() {
-  return this.deferred.promise;
 };
 
 
 var httpMethods = {};
 
 var methodFactory = function(methodString) {
-
-  // TODO: Factor logic into helper class(es)
-  // Things here are going to get crazy
   var httpMethod = function(url) {
-    var method = new MethodFactory(url, methodString, this);
-    return method.promise();
+    return new MethodFactory(url, methodString, this);
   };
 
   return httpMethod;
