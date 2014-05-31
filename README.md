@@ -1,9 +1,9 @@
-endpoints
+Endpoints
 =========
 
 [![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
 
-Simple helper library for your service clients
+Simple helper library for your service clients.
 
 ## Install it
 
@@ -29,7 +29,7 @@ var myEndpoint = new Endpoints.GetPost({
 
 var myOtherEndpoint = new Endpoints.Custom({
   url: '/some/other/url',
-  methodList: ['OPTIONS', ''GET', 'DELETE']
+  methodList: ['OPTIONS', 'GET', 'DELETE']
 });
 
 myEndpoint.post({data: {my: 'data'}})
@@ -40,5 +40,5 @@ myOtherEndpoint.get()
 .then(myOtherEndpoint.delete)
 ```
 
-Underneath Endpoints is using jQuery, so the options hash sent to
-Endpoints.Whatever will take any valid jQuery.ajax option.
+Underneath Endpoints is using [jQuery.ajax](http://api.jquery.com/jquery.ajax/), so the options hash sent to
+Endpoints.Whatever will take any valid [jQuery.ajax](http://api.jquery.com/jquery.ajax/) option.
