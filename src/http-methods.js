@@ -15,7 +15,7 @@ var methodHelper = function(method) {
     var deferred = Q.defer();
 
     var resolve = function(data) {
-      if(method === 'GET') {
+      if(method === 'GET' || method === 'POST' || method === 'PUT') {
         this.data = data;
       }
 
