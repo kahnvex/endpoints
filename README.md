@@ -38,7 +38,7 @@ var Endpoints = require('endpointsjs');
 
 var myOtherEndpoint = new Endpoints.Custom({
   url: '/some/other/url',
-  methodList: ['OPTIONS', 'GET', 'DELETE']
+  methodList: ['options', 'get', 'delete']
 });
 
 var promiseCallback = function(data) {
