@@ -11,20 +11,14 @@ describe('endpoints', function() {
     Endpoints.should.be.a.Object;
   });
 
-  it('has GetPost, GetPutDelete endpoint patterns', function() {
-    Endpoints.should.have.property('GetPost');
-    Endpoints.should.have.property('GetPutDelete');
-  });
-
   describe('using an endpoint pattern', function() {
     var response;
     var fakeEndpoint;
     var returnedEndpoint;
 
     beforeEach(function(done) {
-      fakeEndpoint = new Endpoints.GetPost({
-        url: '/base/test/data-1-fixture.json'
-      });
+      fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
+        .methods(['get', 'patch', 'delete']);
 
       var checkResponse = function(_endpoint) {
         returnedEndpoint = _endpoint;
@@ -37,7 +31,7 @@ describe('endpoints', function() {
       };
 
       fakeEndpoint.get()
-      .then(checkResponse, fail);
+        .then(checkResponse, fail);
     });
 
     it('places data in the data property of the pattern', function() {
@@ -53,10 +47,11 @@ describe('endpoints', function() {
     var customEndpoint;
 
     beforeEach(function() {
-      customEndpoint = new Endpoints.Custom({
-        url: '/',
-        methodList: ['get', 'patch', 'delete']
-      });
+
+      customEndpoint = Endpoints.create('/')
+        .methods(['get', 'patch', 'delete'])
+        .header('Content-Type', 'application/json');
+
     });
 
     it('generates the correct methods', function() {
@@ -71,9 +66,8 @@ describe('endpoints', function() {
     var fakeEndpoint;
 
     beforeEach(function(done) {
-      fakeEndpoint = new Endpoints.GetPost({
-        url: '/base/test/data-1-fixture.json'
-      });
+      fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
+        .methods(['get']);
 
       var checkResponse = function(_endpoint) {
         done();
@@ -84,12 +78,39 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get({url: '/base/test/data-2-fixture.json'})
-      .then(checkResponse, fail);
+      fakeEndpoint.get('/base/test/data-2-fixture.json')
+        .then(checkResponse, fail);
     });
 
     it('will override endpoint settings', function() {
       fakeEndpoint.data.should.have.property('GET', 'all the things');
+    });
+  });
+
+  describe('error behavior', function() {
+    var error;
+    var fakeEndpoint;
+
+    beforeEach(function(done) {
+      fakeEndpoint = Endpoints.create('/404/url')
+        .methods(['get']);
+
+      var success = function() {
+        true.should.be.false;
+        done();
+      };
+
+      var fail = function(_error) {
+        error = _error;
+        done();
+      };
+
+      fakeEndpoint.get('/404/url')
+        .then(success, fail);
+    });
+
+    it('returns an error correctly', function() {
+      error.status.should.be.exactly(404);
     });
   });
 });
