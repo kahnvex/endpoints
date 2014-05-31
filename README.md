@@ -13,7 +13,7 @@ npm install endpointsjs
 
 ## Usage
 
-Use Endpoints to create an endpoint pattern, then call methods on that pattern to get promises back. Simple as that.
+Use Endpoints to create an endpoint pattern, then call methods on that pattern and get promises back. No pyramid of doom. Code over configuration.
 
 ```javascript
 var Endpoints = require('endpointsjs');
@@ -33,20 +33,20 @@ myEndpoint.get()
 .then(promiseCallback);
 ```
 
-It is also possible to create a custom endpoint pattern.
+Sending data to the server is also easy
 
 ```javascript
 var Endpoints = require('endpointsjs');
 
 var myOtherEndpoint = new Endpoints.create('/some/other/url')
-  .methods(['options', 'post', 'delete']);
+  .methods(['options', 'post', 'delete'])
+  .data({myData: 123});
 
 var promiseCallback = function(endpoint) {
   console.log(endpoint.data);
 };
 
 myOtherEndpoint.post()
-.data({data: {myData: 123}})
 .send()
 .then(promiseCallback)
 .done();
