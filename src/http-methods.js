@@ -1,17 +1,40 @@
 'use strict';
 
 var $ = require('jquery');
+var Q = require('q');
 var qjax = require('qjax');
 
 
 var httpMethods = {};
 
 var methodHelper = function(method) {
-  return function(options) {
+
+  // TODO: Factor logic into helper class(es)
+  // Things here are going to get crazy
+  var httpMethod = function(options) {
+    var deferred = Q.defer();
+
+    var resolve = function(data) {
+      if(method === 'GET' || method === 'POST' || method === 'PUT') {
+        this.data = data;
+      }
+
+      deferred.resolve(this);
+    };
+
+    var reject = function(error) {
+      deferred.reject(error);
+    };
+
     options = $.extend({}, this.ajaxOptions, options);
 
-    return qjax.methodFactory(method)(options);
+    qjax.methodFactory(method)(options)
+    .then(resolve.bind(this), reject.bind(this));
+
+    return deferred.promise;
   };
+
+  return httpMethod;
 };
 
 httpMethods.head = methodHelper('HEAD');
