@@ -5,6 +5,7 @@ require('./bind-polyfill');
 
 var Endpoints = require('../src/index');
 
+
 describe('endpoints', function() {
   it('is an object', function() {
     Endpoints.should.be.a.Object;
