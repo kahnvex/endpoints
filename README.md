@@ -43,7 +43,7 @@ var myOtherEndpoint = new Endpoints.Custom({
 });
 
 var promiseCallback = function(endpoint) {
-  console.log(data);
+  console.log(endpoint.data);
 };
 
 myOtherEndpoint.post({data: {myData: 123}})
