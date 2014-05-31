@@ -18,6 +18,11 @@ function MethodFactory(url, method, endpoint) {
   return this;
 }
 
+MethodFactory.prototype.url = function(url) {
+  this.url = url;
+  return this;
+};
+
 MethodFactory.prototype.header = function(headerKey, headerValue) {
   this.requestObject.set(headerKey, headerValue);
   return this;
