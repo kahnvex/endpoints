@@ -11,7 +11,7 @@ function Custom(options) {
     this[methodList[index]] = httpMethods[methodList[index]].bind(this);
   }
 
-  this.options = options;
+  this.ajaxOptions = options;
 }
 
 

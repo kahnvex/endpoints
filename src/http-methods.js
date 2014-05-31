@@ -5,7 +5,7 @@ var httpMethods = {};
 
 var methodHelper = function(method) {
   return function(options) {
-    options = $.extend({}, this.options, options);
+    options = $.extend({}, this.ajaxOptions, options);
 
     return qjax.methodFactory(method)(options);
   };
