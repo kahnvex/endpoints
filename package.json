@@ -1,0 +1,42 @@
+{
+  "name": "endpoints",
+  "version": "0.0.0",
+  "description": "Simple helper functions for service client implementation",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kahnjw/endpoints.git"
+  },
+  "keywords": [
+    "ajax",
+    "service",
+    "client",
+    "rest",
+    "endpoint"
+  ],
+  "author": "Jarrod Kahn - @kahnjw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kahnjw/endpoints/issues"
+  },
+  "homepage": "https://github.com/kahnjw/endpoints",
+  "devDependencies": {
+    "mocha": "1.20.x",
+    "should": "4.0.x",
+    "jshint": "2.5.x",
+    "karma": "0.12.x",
+    "browserify": "4.1.x",
+    "karma-browserify": "0.2.x",
+    "karma-mocha": "0.1.x",
+    "karma-phantomjs-launcher": "0.1.x",
+    "karma-cli": "0.0.x",
+    "lodash": "2.4.x"
+  },
+  "dependencies": {
+    "qjax": "0.0.3",
+    "jquery": "~2.1.1"
+  }
+}
