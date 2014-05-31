@@ -18,9 +18,9 @@ Use Endpoints to create an endpoint pattern, then call methods on that pattern t
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myEndpoint = new Endpoints.GetPost({
-  url: '/some/url',
-  dataType: 'json'
+var myEndpoint = new Endpoints.create('/some/url')
+  .header('Content-Type', 'application/json')
+  .methods(['get', 'post']);
 });
 
 var promiseCallback = function(endpoint) {
@@ -29,6 +29,7 @@ var promiseCallback = function(endpoint) {
 };
 
 myEndpoint.get()
+.send()
 .then(promiseCallback);
 ```
 
@@ -37,22 +38,19 @@ It is also possible to create a custom endpoint pattern.
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myOtherEndpoint = new Endpoints.Custom({
-  url: '/some/other/url',
-  methodList: ['options', 'post', 'delete']
-});
+var myOtherEndpoint = new Endpoints.create('/some/other/url')
+  .methods(['options', 'post', 'delete']);
 
 var promiseCallback = function(endpoint) {
   console.log(endpoint.data);
 };
 
-myOtherEndpoint.post({data: {myData: 123}})
+myOtherEndpoint.post()
+.data({data: {myData: 123}})
+.send()
 .then(promiseCallback)
-.then(myOtherEndpoint.delete);
+.done();
 ```
-
-Underneath Endpoints is using [jQuery.ajax](http://api.jquery.com/jquery.ajax/), so the options hash sent to
-Endpoints.Whatever will take any valid [jQuery.ajax](http://api.jquery.com/jquery.ajax/) option.
 
 ### Available Endpoint Patterns
 
