@@ -63,11 +63,15 @@ GetPut [GET, PUT, OPTIONS]
 Custom options.methodList
 ```
 
+### Is Endpoints for Me?
+
 Endpoints makes assumptions about APIs and Services. Most of these assumptions
 are derived from the [REST style architecture](http://www.restapitutorial.com/).
 Here is a list of them:
-* Resources are mapped to by URIs, not query parameters
-* An APIs endpoints return a resources representation after GET, POST, or PUTS
-* Data formatting information is returned in the response
+* APIs are stateless
+* API endpoints return a resources representation after GET, POST, or PUT
+* Content-Type is specified in the response
 
-If you are using a non-RESTful API, Endpoints probably isn't the right choice.
+If your API does not closely follow REST, Endpoints probably isn't right for you.
+
+If your API closely follows REST, have fun.
