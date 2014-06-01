@@ -6,7 +6,7 @@ var Q = require('q');
 var _ = require('lodash');
 
 
-var wrapResponses = function(methodObj) {
+var getDeferred = function(methodObj) {
   var deferred = Q.defer();
 
   var _reject = function(error) {
@@ -66,7 +66,7 @@ MethodFactory.prototype.data = function(data) {
 };
 
 MethodFactory.prototype.send = function() {
-  var callbacks = wrapResponses(this);
+  var callbacks = getDeferred(this);
   var requestObject = this.createRequestObject();
 
   agentQ.end(requestObject)
