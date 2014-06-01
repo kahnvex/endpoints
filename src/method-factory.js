@@ -11,7 +11,7 @@ function MethodFactory(url, method, endpoint) {
   this.endpoint = endpoint;
   this.headers = {};
 
-  this._url = url || this.endpoint.url;
+  this._url = url || this.endpoint._url;
 
   this.deferred = Q.defer();
 
