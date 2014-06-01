@@ -30,7 +30,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get()
+      fakeEndpoint.get
         .send()
         .then(checkResponse, fail);
     });
@@ -94,7 +94,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.post()
+      fakeEndpoint.post
         .data({some: 'data'})
         .send()
         .then(complete, complete);
@@ -117,7 +117,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.post()
+      fakeEndpoint.post
         .send()
         .then(complete, complete);
     });
@@ -145,7 +145,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get()
+      fakeEndpoint.get
         .send()
         .then(success, fail);
     });
