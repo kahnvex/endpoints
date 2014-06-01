@@ -20,19 +20,14 @@ describe('endpoints', function() {
       fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
         .methods(['get', 'patch', 'delete']);
 
-      var checkResponse = function(_endpoint) {
+      var responseHandler = function(_endpoint) {
         returnedEndpoint = _endpoint;
-        done();
-      };
-
-      var fail = function(_response) {
-        true.should.be.false;
         done();
       };
 
       fakeEndpoint.get
         .send()
-        .then(checkResponse, fail);
+        .then(responseHandler, responseHandler);
     });
 
     it('places data in the data property of the pattern', function() {
@@ -45,18 +40,18 @@ describe('endpoints', function() {
   });
 
   describe('create a custom endpoint pattern', function() {
-    var customEndpoint;
+    var fakeEndpoint;
 
     beforeEach(function() {
-      customEndpoint = Endpoints.create('/')
+      fakeEndpoint = Endpoints.create('/')
         .methods(['get', 'patch', 'delete'])
         .header('Content-Type', 'application/json');
     });
 
-    it('generates the correct methods', function() {
-      customEndpoint.get.should.be.a.Function;
-      customEndpoint.delete.should.be.a.Function;
-      customEndpoint.patch.should.be.a.Function;
+    it('generates the correct objects', function() {
+      fakeEndpoint.get.should.be.an.Object;
+      fakeEndpoint.delete.should.be.an.Object;
+      fakeEndpoint.patch.should.be.an.Object;
     });
   });
 
@@ -72,7 +67,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get()
+      fakeEndpoint.get
         .url('/base/test/data-2-fixture.json')
         .send()
         .then(complete, complete);
@@ -113,13 +108,13 @@ describe('endpoints', function() {
         .data({more: 'data'})
         .methods(['post', 'put']);
 
-      var complete = function() {
+      var responseHandler = function() {
         done();
       };
 
       fakeEndpoint.post
         .send()
-        .then(complete, complete);
+        .then(responseHandler, responseHandler);
     });
 
     it('stores data on the endpoint\s data property', function() {
@@ -135,19 +130,14 @@ describe('endpoints', function() {
       fakeEndpoint = Endpoints.create('/404/url')
         .methods(['get']);
 
-      var success = function() {
-        true.should.be.false;
-        done();
-      };
-
-      var fail = function(_error) {
+      var responseHandler = function(_error) {
         error = _error;
         done();
       };
 
       fakeEndpoint.get
         .send()
-        .then(success, fail);
+        .then(responseHandler, responseHandler);
     });
 
     it('returns an error correctly', function() {
