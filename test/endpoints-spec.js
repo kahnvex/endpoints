@@ -37,16 +37,6 @@ describe('endpoints', function() {
     it('returns the endpoint when the promise is resolved', function() {
       returnedEndpoint.should.be.exactly(fakeEndpoint);
     });
-  });
-
-  describe('create a custom endpoint pattern', function() {
-    var fakeEndpoint;
-
-    beforeEach(function() {
-      fakeEndpoint = Endpoints.create('/')
-        .methods(['get', 'patch', 'delete'])
-        .header('Content-Type', 'application/json');
-    });
 
     it('generates the correct objects', function() {
       fakeEndpoint.get.should.be.an.Object;
@@ -73,17 +63,18 @@ describe('endpoints', function() {
         .then(complete, complete);
     });
 
-    it('will override endpoint settings', function() {
+    it('will override the endpoint url', function() {
       fakeEndpoint.data.should.have.property('GET', 'all the things');
     });
   });
 
-  describe('posting and putting data', function() {
+  describe('unsafe operations', function() {
     var fakeEndpoint;
 
     beforeEach(function(done) {
       fakeEndpoint = Endpoints.create('/fake/url')
-        .methods(['post', 'put']);
+        .methods(['post'])
+        .data({endpoint: 'data'});
 
       var complete = function() {
         done();
@@ -95,12 +86,12 @@ describe('endpoints', function() {
         .then(complete, complete);
     });
 
-    it('will override endpoint settings', function() {
+    it('will use the methods data over the endopints data', function() {
       fakeEndpoint.data.should.have.property('some', 'data');
     });
   });
 
-  describe('posting and putting data', function() {
+  describe('unsafe operations', function() {
     var fakeEndpoint;
 
     beforeEach(function(done) {
@@ -140,8 +131,12 @@ describe('endpoints', function() {
         .then(responseHandler, responseHandler);
     });
 
-    it('returns an error correctly', function() {
+    it('returns an error with a status, when received form server', function() {
       error.status.should.be.exactly(404);
+    });
+
+    it('returns an error with responseText', function() {
+      error.responseText.should.be.exactly('NOT FOUND');
     });
   });
 });
