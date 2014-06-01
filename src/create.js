@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 
 function create(url) {
-  this.url = url;
+  this._url = url;
 
   return this;
 }
@@ -13,12 +13,12 @@ function create(url) {
 create.prototype.headers = {};
 
 create.prototype.url = function(url) {
-  this.url = url;
+  this._url = url;
 };
 
 create.prototype.methods = function(methodList){
   _.each(methodList, function(method){
-    this[method] = _.bind(httpMethods[method], this);
+    this[method] = _.bind(httpMethods[method], this)();
   }, this);
 
   return this;

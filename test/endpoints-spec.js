@@ -20,19 +20,14 @@ describe('endpoints', function() {
       fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
         .methods(['get', 'patch', 'delete']);
 
-      var checkResponse = function(_endpoint) {
+      var responseHandler = function(_endpoint) {
         returnedEndpoint = _endpoint;
         done();
       };
 
-      var fail = function(_response) {
-        true.should.be.false;
-        done();
-      };
-
-      fakeEndpoint.get()
+      fakeEndpoint.get
         .send()
-        .then(checkResponse, fail);
+        .then(responseHandler, responseHandler);
     });
 
     it('places data in the data property of the pattern', function() {
@@ -42,21 +37,11 @@ describe('endpoints', function() {
     it('returns the endpoint when the promise is resolved', function() {
       returnedEndpoint.should.be.exactly(fakeEndpoint);
     });
-  });
 
-  describe('create a custom endpoint pattern', function() {
-    var customEndpoint;
-
-    beforeEach(function() {
-      customEndpoint = Endpoints.create('/')
-        .methods(['get', 'patch', 'delete'])
-        .header('Content-Type', 'application/json');
-    });
-
-    it('generates the correct methods', function() {
-      customEndpoint.get.should.be.a.Function;
-      customEndpoint.delete.should.be.a.Function;
-      customEndpoint.patch.should.be.a.Function;
+    it('generates the correct objects', function() {
+      fakeEndpoint.get.should.be.an.Object;
+      fakeEndpoint.delete.should.be.an.Object;
+      fakeEndpoint.patch.should.be.an.Object;
     });
   });
 
@@ -72,39 +57,41 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get('/base/test/data-2-fixture.json')
+      fakeEndpoint.get
+        .url('/base/test/data-2-fixture.json')
         .send()
         .then(complete, complete);
     });
 
-    it('will override endpoint settings', function() {
+    it('will override the endpoint url', function() {
       fakeEndpoint.data.should.have.property('GET', 'all the things');
     });
   });
 
-  describe('posting and putting data', function() {
+  describe('unsafe operations', function() {
     var fakeEndpoint;
 
     beforeEach(function(done) {
       fakeEndpoint = Endpoints.create('/fake/url')
-        .methods(['post', 'put']);
+        .methods(['post'])
+        .data({endpoint: 'data'});
 
       var complete = function() {
         done();
       };
 
-      fakeEndpoint.post()
+      fakeEndpoint.post
         .data({some: 'data'})
         .send()
         .then(complete, complete);
     });
 
-    it('will override endpoint settings', function() {
+    it('will use the methods data over the endopints data', function() {
       fakeEndpoint.data.should.have.property('some', 'data');
     });
   });
 
-  describe('posting and putting data', function() {
+  describe('unsafe operations', function() {
     var fakeEndpoint;
 
     beforeEach(function(done) {
@@ -112,16 +99,16 @@ describe('endpoints', function() {
         .data({more: 'data'})
         .methods(['post', 'put']);
 
-      var complete = function() {
+      var responseHandler = function() {
         done();
       };
 
-      fakeEndpoint.post()
+      fakeEndpoint.post
         .send()
-        .then(complete, complete);
+        .then(responseHandler, responseHandler);
     });
 
-    it('will override endpoint settings', function() {
+    it('stores data on the endpoint\s data property', function() {
       fakeEndpoint.data.should.have.property('more', 'data');
     });
   });
@@ -134,23 +121,22 @@ describe('endpoints', function() {
       fakeEndpoint = Endpoints.create('/404/url')
         .methods(['get']);
 
-      var success = function() {
-        true.should.be.false;
-        done();
-      };
-
-      var fail = function(_error) {
+      var responseHandler = function(_error) {
         error = _error;
         done();
       };
 
-      fakeEndpoint.get()
+      fakeEndpoint.get
         .send()
-        .then(success, fail);
+        .then(responseHandler, responseHandler);
     });
 
-    it('returns an error correctly', function() {
+    it('returns an error with a status, when received form server', function() {
       error.status.should.be.exactly(404);
+    });
+
+    it('returns an error with responseText', function() {
+      error.responseText.should.be.exactly('NOT FOUND');
     });
   });
 });

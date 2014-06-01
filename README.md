@@ -28,7 +28,7 @@ var promiseCallback = function(endpoint) {
   assert(endpoint === myEndpoint);
 };
 
-myEndpoint.get()
+myEndpoint.get
   .send()
   .then(promiseCallback);
 ```
@@ -46,7 +46,7 @@ var promiseCallback = function(endpoint) {
   console.log(endpoint.data);
 };
 
-myOtherEndpoint.post()
+myOtherEndpoint.post
   .send()
   .then(promiseCallback)
   .done();
