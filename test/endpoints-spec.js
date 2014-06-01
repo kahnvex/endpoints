@@ -121,7 +121,7 @@ describe('endpoints', function() {
         .then(complete, complete);
     });
 
-    it('will override endpoint settings', function() {
+    it('stores data on the endpoint\s data property', function() {
       fakeEndpoint.data.should.have.property('more', 'data');
     });
   });
