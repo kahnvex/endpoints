@@ -1,7 +1,7 @@
 'use strict';
 
 var request = require('superagent');
-var agentQ = require('agent-q');
+var agentQ = require('qagent');
 var Q = require('q');
 var _ = require('lodash');
 
