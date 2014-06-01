@@ -28,16 +28,23 @@
     "should": "4.0.x",
     "jshint": "2.5.x",
     "karma": "0.12.x",
-    "browserify": "4.1.x",
+    "browserify": "~4.1.6",
     "karma-browserify": "0.2.x",
     "karma-mocha": "0.1.x",
     "karma-phantomjs-launcher": "0.1.x",
     "karma-cli": "0.0.x",
-    "lodash": "2.4.x"
+    "lodash": "2.4.x",
+    "gulp": "~3.7.0",
+    "vinyl-source-stream": "~0.1.1",
+    "gulp-size": "~0.3.1",
+    "gulp-uglify": "~0.3.0",
+    "gulp-streamify": "0.0.5",
+    "browserify-graph": "0.0.0",
+    "gulp-shell": "~0.2.5"
   },
   "dependencies": {
     "q": "1.x.x",
-    "agent-q": "0.0.3",
+    "qagent": "0.0.1",
     "superagent": "0.18.x"
   }
 }
