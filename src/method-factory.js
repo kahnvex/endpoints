@@ -9,23 +9,29 @@ var _ = require('lodash');
 function MethodFactory(url, method, endpoint) {
   this.method = method;
   this.endpoint = endpoint;
+  this.headers = {};
 
-  this.url = url || this.endpoint.url;
-  this.requestObject = this.createRequestObject(this.url);
+  this._url = url || this.endpoint.url;
 
   this.deferred = Q.defer();
 
   return this;
 }
 
-MethodFactory.prototype.url = function(url) {
-  this.url = url;
+MethodFactory.prototype.header = function(headerKey, headerValue) {
+  this.headers[headerKey] = headerValue;
+
   return this;
 };
 
-MethodFactory.prototype.header = function(headerKey, headerValue) {
-  this.requestObject.set(headerKey, headerValue);
+MethodFactory.prototype.url = function(url) {
+  this._url = url
+
   return this;
+};
+
+MethodFactory.prototype.merge = function(defaults, overrides) {
+  return _.extend({}, defaults, overrides);
 };
 
 MethodFactory.prototype.data = function(data) {
@@ -37,22 +43,24 @@ MethodFactory.prototype.data = function(data) {
 MethodFactory.prototype.send = function() {
   var handleResponse = _.bind(this._handleResponse, this);
   var reject = _.bind(this._reject, this);
+  var requestObject = this.createRequestObject();
 
-  agentQ.end(this.requestObject)
+  agentQ.end(requestObject)
   .then(handleResponse, reject)
   .done();
 
   return this.deferred.promise;
 };
 
-MethodFactory.prototype.createRequestObject = function(url) {
-  var requestObject = request[this.method](url);
+MethodFactory.prototype.createRequestObject = function() {
+  var requestObject = request[this.method](this._url);
+  var headers = this.merge(this.endpoint.headers, this.headers);
 
   if(_.contains(['post', 'patch', 'put'], this.method)) {
     requestObject.send(this.endpoint.data);
   }
 
-  _.each(this.endpoint.headers, function(headerValue, headerName) {
+  _.each(headers, function(headerValue, headerName) {
     requestObject.set(headerName, headerValue);
   }, this);
 

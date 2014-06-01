@@ -72,7 +72,8 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get('/base/test/data-2-fixture.json')
+      fakeEndpoint.get()
+        .url('/base/test/data-2-fixture.json')
         .send()
         .then(complete, complete);
     });
