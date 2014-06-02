@@ -139,4 +139,35 @@ describe('endpoints', function() {
       error.responseText.should.be.exactly('NOT FOUND');
     });
   });
+
+  describe('sending multiple requests', function() {
+    var error;
+    var fakeEndpoint;
+    var firstCalled = false;
+    var seecondCalled = false;
+
+    beforeEach(function(done) {
+      fakeEndpoint = Endpoints.create('/404/url')
+        .methods(['get']);
+
+      var firstResponse = function() {
+        firstCalled = true;
+      };
+      var secondResponse = function() {
+        seecondCalled = true;
+        done();
+      };
+
+      fakeEndpoint.get.send()
+        .then(firstResponse, firstResponse);
+
+      fakeEndpoint.get.send()
+        .then(secondResponse, secondResponse);
+    });
+
+    it('calls both functions after send', function() {
+      firstCalled.should.be.exactly(true);
+      seecondCalled.should.be.exactly(true);
+    });
+  });
 });

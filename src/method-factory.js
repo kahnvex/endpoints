@@ -1,9 +1,10 @@
 'use strict';
 
 var request = require('superagent');
-var agentQ = require('qagent');
-var Q = require('q');
 var _ = require('lodash');
+var Q = require('q');
+var agentQ = require('qagent');
+var genDeferred = require('./gen-deferred');
 
 
 function MethodFactory(url, method, endpoint) {
@@ -12,8 +13,6 @@ function MethodFactory(url, method, endpoint) {
   this.headers = {};
 
   this._url = url || this.endpoint._url;
-
-  this.deferred = Q.defer();
 
   return this;
 }
@@ -41,15 +40,31 @@ MethodFactory.prototype.data = function(data) {
 };
 
 MethodFactory.prototype.send = function() {
-  var handleResponse = _.bind(this._handleResponse, this);
-  var reject = _.bind(this._reject, this);
+  var d = genDeferred();
   var requestObject = this.createRequestObject();
 
+  var handleResponse = function(response) {
+    if(response.xhr.status > 299) {
+      d.reject(response.xhr);
+      return;
+    }
+
+    if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
+      this.endpoint.data = JSON.parse(response.xhr.response);
+    }
+
+    d.resolve(this.endpoint);
+  };
+
+  var reject = function(error) {
+    d.reject(error);
+  };
+
   agentQ.end(requestObject)
-  .then(handleResponse, reject)
+  .then(_.bind(handleResponse, this), reject)
   .done();
 
-  return this.deferred.promise;
+  return d.promise;
 };
 
 MethodFactory.prototype.createRequestObject = function() {
@@ -65,28 +80,6 @@ MethodFactory.prototype.createRequestObject = function() {
   }, this);
 
   return requestObject;
-};
-
-/* heandeResponse takes a response object
- * - if the response code is not in the 200 range the promise is rejected
- *   - and given the xhr response
- * - else the response body is parsed into the data proerty of the endpoint
- */
-MethodFactory.prototype._handleResponse = function(response) {
-  if(response.xhr.status > 299) {
-    this.deferred.reject(response.xhr);
-    return;
-  }
-
-  if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
-    this.endpoint.data = JSON.parse(response.xhr.response);
-  }
-
-  this.deferred.resolve(this.endpoint);
-};
-
-MethodFactory.prototype._reject = function(error) {
-  this.deferred.reject(error);
 };
 
 module.exports = MethodFactory;
