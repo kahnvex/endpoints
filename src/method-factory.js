@@ -1,37 +1,11 @@
 'use strict';
 
 var request = require('superagent');
-var agentQ = require('qagent');
-var Q = require('q');
 var _ = require('lodash');
+var Q = require('q');
+var agentQ = require('qagent');
+var genDeferred = require('./gen-deferred');
 
-
-var getDeferred = function(methodObj) {
-  var deferred = Q.defer();
-
-  var _reject = function(error) {
-    deferred.reject(error);
-  };
-
-  var _handleResponse = function(response) {
-    if(response.xhr.status > 299) {
-      deferred.reject(response.xhr);
-      return;
-    }
-
-    if(_.contains(['get', 'post', 'put', 'patch'], methodObj.method)) {
-      methodObj.endpoint.data = JSON.parse(response.xhr.response);
-    }
-
-    deferred.resolve(methodObj.endpoint);
-  };
-
-  return {
-    deferred: deferred,
-    reject: _reject,
-    handleResponse: _handleResponse
-  };
-};
 
 function MethodFactory(url, method, endpoint) {
   this.method = method;
@@ -66,14 +40,31 @@ MethodFactory.prototype.data = function(data) {
 };
 
 MethodFactory.prototype.send = function() {
-  var callbacks = getDeferred(this);
+  var d = genDeferred();
   var requestObject = this.createRequestObject();
 
+  var handleResponse = function(response) {
+    if(response.xhr.status > 299) {
+      d.reject(response.xhr);
+      return;
+    }
+
+    if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
+      this.endpoint.data = JSON.parse(response.xhr.response);
+    }
+
+    d.resolve(this.endpoint);
+  };
+
+  var reject = function(error) {
+    d.reject(error);
+  };
+
   agentQ.end(requestObject)
-  .then(callbacks.handleResponse, callbacks.reject)
+  .then(_.bind(handleResponse, this), reject)
   .done();
 
-  return callbacks.deferred.promise;
+  return d.deferred.promise;
 };
 
 MethodFactory.prototype.createRequestObject = function() {
