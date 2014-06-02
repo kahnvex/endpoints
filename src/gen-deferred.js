@@ -12,9 +12,10 @@ var genDeferred = function(methodObj) {
   };
 
   return {
-    deferred: deferred,
+    promise: deferred.promise,
     reject: reject,
-    resolve: resolve
+    resolve: resolve,
+    _deferred: deferred
   };
 };
 

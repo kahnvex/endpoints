@@ -64,7 +64,7 @@ MethodFactory.prototype.send = function() {
   .then(_.bind(handleResponse, this), reject)
   .done();
 
-  return d.deferred.promise;
+  return d.promise;
 };
 
 MethodFactory.prototype.createRequestObject = function() {
