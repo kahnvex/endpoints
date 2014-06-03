@@ -1,6 +1,6 @@
 'use strict';
 
-var MethodFactory = require('../../src/method-factory');
+var Method = require('../../src/http-method');
 var chai = require('chai');
 var shmock = require('shmock');
 var expect = chai.expect;
@@ -13,7 +13,7 @@ describe('method factory', function() {
   var endpoint = {};
 
   beforeEach(function() {
-    method = new MethodFactory('/', 'get', endpoint);
+    method = new Method('/', 'get', endpoint);
   });
 
   it('returns itself after calls to url', function() {

@@ -6,7 +6,7 @@ var agentQ = require('qagent');
 var genDeferred = require('./gen-deferred');
 
 
-function MethodFactory(url, method, endpoint) {
+function Method(url, method, endpoint) {
   this.method = method;
   this.endpoint = endpoint;
   this.headers = {};
@@ -16,29 +16,29 @@ function MethodFactory(url, method, endpoint) {
   return this;
 }
 
-MethodFactory.prototype.header = function(headerKey, headerValue) {
+Method.prototype.header = function(headerKey, headerValue) {
   this.headers[headerKey] = headerValue;
 
   return this;
 };
 
-MethodFactory.prototype.url = function(url) {
+Method.prototype.url = function(url) {
   this._url = url;
 
   return this;
 };
 
-MethodFactory.prototype.merge = function(defaults, overrides) {
+Method.prototype.merge = function(defaults, overrides) {
   return _.extend({}, defaults, overrides);
 };
 
-MethodFactory.prototype.data = function(data) {
+Method.prototype.data = function(data) {
   this.endpoint.data = data;
 
   return this;
 };
 
-MethodFactory.prototype.massageResponse = function(_response) {
+Method.prototype.massageResponse = function(_response) {
   var response = {};
 
   if(_response.xhr) {
@@ -61,7 +61,7 @@ MethodFactory.prototype.massageResponse = function(_response) {
   return response;
 };
 
-MethodFactory.prototype.send = function() {
+Method.prototype.send = function() {
   var d = genDeferred();
   var requestObject = this.createRequestObject();
 
@@ -93,7 +93,7 @@ MethodFactory.prototype.send = function() {
   return d.promise;
 };
 
-MethodFactory.prototype.createRequestObject = function() {
+Method.prototype.createRequestObject = function() {
   var requestObject = request[this.method](this._url);
   var headers = this.merge(this.endpoint.headers, this.headers);
 
@@ -108,4 +108,4 @@ MethodFactory.prototype.createRequestObject = function() {
   return requestObject;
 };
 
-module.exports = MethodFactory;
+module.exports = Method;
