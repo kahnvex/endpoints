@@ -66,9 +66,7 @@ Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
   var handleResponse = function(data) {
-    var responseBody;
     var response = this.massageResponse(data);
-    var status;
 
     if(response.status > 299) {
       d.reject(response.all);
