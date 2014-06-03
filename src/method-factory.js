@@ -49,12 +49,14 @@ MethodFactory.prototype.massageResponse = function(_response) {
     if(response.status < 300) {
       response.body = JSON.parse(_response.xhr.response);
     }
-  } else {
-    /* Node like response */
-    response.all = _response.res;
-    response.body = _response.res.body;
-    response.status = _response.res.statusCode;
+
+    return response;
   }
+
+  /* Node like response */
+  response.all = _response.res;
+  response.body = _response.res.body;
+  response.status = _response.res.statusCode;
 
   return response;
 };
