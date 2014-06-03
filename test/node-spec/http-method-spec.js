@@ -73,7 +73,7 @@ describe('method factory', function() {
       var assertSuccess = function(response) {
         response.res.statusCode.should.equal(204);
         done();
-      }
+      };
 
       mock.get('/second').reply(204);
 
