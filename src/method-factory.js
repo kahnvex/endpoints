@@ -38,38 +38,43 @@ MethodFactory.prototype.data = function(data) {
   return this;
 };
 
+MethodFactory.prototype.massageResponse = function(_response) {
+  var response = {};
+
+  if(_response.xhr) {
+    /* Browser like response */
+    response.all = _response.xhr;
+    response.status = _response.xhr.status;
+
+    if(response.status < 300) {
+      response.body = JSON.parse(_response.xhr.response);
+    }
+  } else {
+    /* Node like response */
+    response.all = _response.res;
+    response.body = _response.res.body;
+    response.status = _response.res.statusCode;
+  }
+
+  return response;
+};
+
 MethodFactory.prototype.send = function() {
   var d = genDeferred();
   var requestObject = this.createRequestObject();
 
   var handleResponse = function(data) {
     var responseBody;
-    var response;
+    var response = this.massageResponse(data);
     var status;
 
-    if(data.xhr) {
-      /* Browser like response */
-      response = data.xhr;
-      responseBody = data.xhr.response;
-      status = data.xhr.status;
-    } else {
-      /* Node like response */
-      response = data.res;
-      responseBody = data.res.body;
-      status = data.res.statusCode;
-    }
-
-    if(status > 299) {
-      d.reject(response);
+    if(response.status > 299) {
+      d.reject(response.all);
       return;
     }
 
-    if(data.xhr) {
-      responseBody = JSON.parse(responseBody);
-    }
-
     if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
-      this.endpoint.data = responseBody;
+      this.endpoint.data = response.body;
     }
 
     d.resolve(this.endpoint);
