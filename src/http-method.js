@@ -47,7 +47,11 @@ Method.prototype.massageResponse = function(_response) {
     response.status = _response.xhr.status;
 
     if(response.status < 300) {
-      response.body = JSON.parse(_response.xhr.response);
+      try {
+        response.body = JSON.parse(_response.xhr.response);
+      } catch(e) {
+        response.body = _response.xhr.response;
+      }
     }
 
     return response;
@@ -55,7 +59,7 @@ Method.prototype.massageResponse = function(_response) {
 
   /* Node like response */
   response.all = _response.res;
-  response.body = _response.res.body;
+  response.body = _response.res.body || _response.res.text;
   response.status = _response.res.statusCode;
 
   return response;

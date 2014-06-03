@@ -16,9 +16,9 @@ gulp.task('footprint', function() {
       .pipe(source('bundle.js'))
       .pipe(streamify(uglify()))
       .pipe(streamify(size()))
-      .pipe(shell([
+      .pipe(shell(
         'browserify-graph src/index.js'
-      ]));
+      ));
 });
 
 gulp.task('browserspec', function() {
