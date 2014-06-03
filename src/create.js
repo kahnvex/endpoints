@@ -6,8 +6,6 @@ var _ = require('lodash');
 
 function create(url) {
   this._url = url;
-
-  return this;
 }
 
 create.prototype.headers = {};

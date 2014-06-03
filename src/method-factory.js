@@ -43,14 +43,34 @@ MethodFactory.prototype.send = function() {
   var d = genDeferred();
   var requestObject = this.createRequestObject();
 
-  var handleResponse = function(response) {
-    if(response.xhr.status > 299) {
-      d.reject(response.xhr);
+  var handleResponse = function(data) {
+    var responseBody;
+    var response;
+    var status;
+
+    if(data.xhr) {
+      /* Browser like response */
+      response = data.xhr;
+      responseBody = data.xhr.response;
+      status = data.xhr.status;
+    } else {
+      /* Node like response */
+      response = data.res;
+      responseBody = data.res.body;
+      status = data.res.statusCode;
+    }
+
+    if(status > 299) {
+      d.reject(response);
       return;
     }
 
+    if(data.xhr) {
+      responseBody = JSON.parse(responseBody);
+    }
+
     if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
-      this.endpoint.data = JSON.parse(response.xhr.response);
+      this.endpoint.data = responseBody;
     }
 
     d.resolve(this.endpoint);

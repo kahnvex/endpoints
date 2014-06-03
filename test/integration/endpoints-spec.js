@@ -3,7 +3,7 @@
 require('should');
 require('./bind-polyfill');
 
-var Endpoints = require('../src/index');
+var Endpoints = require('../../src/index');
 
 
 describe('endpoints', function() {

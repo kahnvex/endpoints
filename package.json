@@ -40,7 +40,11 @@
     "gulp-uglify": "~0.3.0",
     "gulp-streamify": "0.0.5",
     "browserify-graph": "0.0.0",
-    "gulp-shell": "~0.2.5"
+    "gulp-shell": "~0.2.5",
+    "gulp-karma": "0.0.4",
+    "gulp-mocha": "~0.4.1",
+    "shmock": "0.7.x",
+    "chai": "~1.9.1"
   },
   "dependencies": {
     "q": "1.x.x",
