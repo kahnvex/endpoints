@@ -4,17 +4,17 @@ var httpMethods = require('./http-methods');
 var _ = require('lodash');
 
 
-function create(url) {
+function Create(url) {
   this._url = url;
 }
 
-create.prototype.headers = {};
+Create.prototype.headers = {};
 
-create.prototype.url = function(url) {
+Create.prototype.url = function(url) {
   this._url = url;
 };
 
-create.prototype.methods = function(methodList){
+Create.prototype.methods = function(methodList){
   _.each(methodList, function(method){
     this[method] = _.bind(httpMethods[method], this)();
   }, this);
@@ -22,16 +22,16 @@ create.prototype.methods = function(methodList){
   return this;
 };
 
-create.prototype.data = function(data) {
+Create.prototype.data = function(data) {
   this.data = data;
 
   return this;
 };
 
-create.prototype.header = function(headerKey, headerValue) {
+Create.prototype.header = function(headerKey, headerValue) {
   this.headers[headerKey] = headerValue;
 
   return this;
 };
 
-module.exports = create;
+module.exports = Create;

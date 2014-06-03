@@ -2,7 +2,6 @@
 
 var request = require('superagent');
 var _ = require('lodash');
-var Q = require('q');
 var agentQ = require('qagent');
 var genDeferred = require('./gen-deferred');
 
@@ -24,7 +23,7 @@ MethodFactory.prototype.header = function(headerKey, headerValue) {
 };
 
 MethodFactory.prototype.url = function(url) {
-  this._url = url
+  this._url = url;
 
   return this;
 };

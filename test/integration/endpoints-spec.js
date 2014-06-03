@@ -12,7 +12,6 @@ describe('endpoints', function() {
   });
 
   describe('using an endpoint pattern', function() {
-    var response;
     var fakeEndpoint;
     var returnedEndpoint;
 
@@ -46,7 +45,6 @@ describe('endpoints', function() {
   });
 
   describe('override endpoint settings', function() {
-    var response;
     var fakeEndpoint;
 
     beforeEach(function(done) {
@@ -108,7 +106,7 @@ describe('endpoints', function() {
         .then(responseHandler, responseHandler);
     });
 
-    it('stores data on the endpoint\s data property', function() {
+    it('stores data on the endpoint\'s data property', function() {
       fakeEndpoint.data.should.have.property('more', 'data');
     });
   });
@@ -141,7 +139,6 @@ describe('endpoints', function() {
   });
 
   describe('sending multiple requests', function() {
-    var error;
     var fakeEndpoint;
     var firstCalled = false;
     var seecondCalled = false;

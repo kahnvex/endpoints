@@ -1,3 +1,5 @@
+'use strict';
+
 var MethodFactory = require('../../src/method-factory');
 var chai = require('chai');
 var shmock = require('shmock');
@@ -26,18 +28,17 @@ describe('method factory', function() {
 
   describe('sending requests to the server', function() {
     var returned;
-    var dataReturned = {data: 'is data-y'};
+    var data = {data: 'is data-y'};
     var mock = shmock(9000);
 
     beforeEach(function(done) {
-      var url = 'http://localhost:9000/'
-      var handler = mock.get('/').reply(200, dataReturned);
-
+      var url = 'http://localhost:9000/';
       var capture = function(_data) {
         returned = _data;
-        handler.done();
         done();
       };
+
+      mock.get('/').reply(200, data);
 
       method
       .url(url)
@@ -50,7 +51,7 @@ describe('method factory', function() {
     });
 
     it('stores data after request is complete', function() {
-      expect(returned.data).to.eql(dataReturned);
+      expect(returned.data).to.eql(data);
     });
   });
 });
