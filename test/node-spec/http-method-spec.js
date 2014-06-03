@@ -28,17 +28,16 @@ describe('method factory', function() {
   });
 
   describe('sending requests to the server', function() {
-    var returned;
-    var data = {data: 'is data-y'};
+    var response;
 
     beforeEach(function(done) {
       var url = 'http://localhost:9000/';
       var capture = function(_data) {
-        returned = _data;
+        response = _data;
         done();
       };
 
-      mock.get('/').reply(200, data);
+      mock.get('/').reply(200, {});
 
       method
       .url(url)
@@ -46,12 +45,10 @@ describe('method factory', function() {
       .then(capture, capture);
     });
 
-    it('returns the endpoint after request is completed', function() {
-      expect(returned).to.equal(endpoint);
-    });
-
-    it('stores data after request is complete', function() {
-      expect(endpoint.data).to.eql(data);
+    it('returns a response after request is completed', function() {
+      expect(response).to.have.property('req');
+      expect(response).to.have.property('res');
+      response.res.statusCode.should.equal(200);
     });
   });
 
@@ -64,7 +61,7 @@ describe('method factory', function() {
         done();
       };
 
-      mock.get('/first').reply(200, 'first');
+      mock.get('/first').reply(200, {});
 
       method
       .url(urlFirst)
@@ -73,17 +70,17 @@ describe('method factory', function() {
     });
 
     it('does second request', function(done) {
-      var assertSuccess = function(returned) {
-        expect(returned.data).to.equal('second');
+      var assertSuccess = function(response) {
+        response.res.statusCode.should.equal(204);
         done();
       }
 
-      mock.get('/second').reply(200, 'second');
+      mock.get('/second').reply(204);
 
       method
       .url(urlSecond)
       .send()
-      .then(assertSuccess, assertSuccess);
+      .then(assertSuccess);
     });
   });
 });
