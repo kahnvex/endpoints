@@ -26,9 +26,10 @@ gulp.task('browserspec', function() {
     .pipe(shell(['karma start']));
 });
 
+
 gulp.task('nodespec', function() {
-  return gulp.src('test/unit/*-spec.js')
-    .pipe(mocha())
+  return gulp.src('test/node-spec/*-spec.js')
+    .pipe(mocha({reporter: 'spec'}))
     .once('end', function () {
       process.exit();
     });

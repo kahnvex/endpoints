@@ -23,9 +23,8 @@ var myEndpoint = new Endpoints.create('/some/url')
   .methods(['get', 'post']);
 
 
-var promiseCallback = function(endpoint) {
-  console.log(endpoint.data);
-  assert(endpoint === myEndpoint);
+var promiseCallback = function(response) {
+  console.log(response);
 };
 
 myEndpoint.get
@@ -39,29 +38,15 @@ Sending data to the server is also easy
 var Endpoints = require('endpointsjs');
 
 var myOtherEndpoint = new Endpoints.create('/some/other/url')
-  .methods(['options', 'post', 'delete'])
-  .data({myData: 123});
+  .methods(['options', 'post', 'delete']);
 
-var promiseCallback = function(endpoint) {
-  console.log(endpoint.data);
+var promiseCallback = function(response) {
+  console.log(response);
 };
 
 myOtherEndpoint.post
+  .data({myData: 123})
   .send()
   .then(promiseCallback)
   .done();
 ```
-
-### Is Endpoints Right for my API?
-
-Endpoints makes assumptions about APIs and Services. Most of these assumptions
-are derived from the [REST style architecture](http://www.restapitutorial.com/).
-Here is a list of them:
-* APIs are stateless
-* API endpoints return a resource representation after GET, POST, or PUT
-* Content-Type is specified in the response
-* Your API makes JSON and/or XML first class citizens
-
-If your API does not closely follow REST, Endpoints probably isn't right for you.
-
-If your API closely follows REST, have fun.

@@ -1,9 +1,9 @@
 'use strict';
 
-var request = require('superagent');
 var _ = require('lodash');
+var Q = require('q');
 var agentQ = require('qagent');
-var genDeferred = require('./gen-deferred');
+var request = require('superagent');
 
 
 function Method(url, method, endpoint) {
@@ -33,74 +33,28 @@ Method.prototype.merge = function(defaults, overrides) {
 };
 
 Method.prototype.data = function(data) {
-  this.endpoint.data = data;
+  this._data = data;
 
   return this;
 };
 
-Method.prototype.massageResponse = function(_response) {
-  var response = {};
-
-  if(_response.xhr) {
-    /* Browser like response */
-    response.all = _response.xhr;
-    response.status = _response.xhr.status;
-
-    if(response.status < 300) {
-      try {
-        response.body = JSON.parse(_response.xhr.response);
-      } catch(e) {
-        response.body = _response.xhr.response;
-      }
-    }
-
-    return response;
-  }
-
-  /* Node like response */
-  response.all = _response.res;
-  response.body = _response.res.body || _response.res.text;
-  response.status = _response.res.statusCode;
-
-  return response;
-};
-
 Method.prototype.send = function() {
-  var d = genDeferred();
+  var deferred = Q.defer();
   var requestObject = this.createRequestObject();
 
-  var handleResponse = function(data) {
-    var response = this.massageResponse(data);
-
-    if(response.status > 299) {
-      d.reject(response.all);
-      return;
-    }
-
-    if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
-      this.endpoint.data = response.body;
-    }
-
-    d.resolve(this.endpoint);
-  };
-
-  var reject = function(error) {
-    d.reject(error);
-  };
-
   agentQ.end(requestObject)
-  .then(_.bind(handleResponse, this), reject)
+  .then(deferred.resolve, deferred.reject)
   .done();
 
-  return d.promise;
+  return deferred.promise;
 };
 
 Method.prototype.createRequestObject = function() {
   var requestObject = request[this.method](this._url);
   var headers = this.merge(this.endpoint.headers, this.headers);
 
-  if(_.contains(['post', 'patch', 'put'], this.method)) {
-    requestObject.send(this.endpoint.data);
+  if(this._data) {
+    requestObject.send(this._data);
   }
 
   _.each(headers, function(headerValue, headerName) {
