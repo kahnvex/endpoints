@@ -1,11 +1,11 @@
 'use strict';
 
-var create = require('./create');
+var Create = require('./create');
 
 var Endpoints = {};
 
 Endpoints.create = function(url) {
-  return new create(url);
-}
+  return new Create(url);
+};
 
 module.exports = Endpoints;

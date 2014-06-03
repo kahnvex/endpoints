@@ -2,12 +2,11 @@
 
 var request = require('superagent');
 var _ = require('lodash');
-var Q = require('q');
 var agentQ = require('qagent');
 var genDeferred = require('./gen-deferred');
 
 
-function MethodFactory(url, method, endpoint) {
+function Method(url, method, endpoint) {
   this.method = method;
   this.endpoint = endpoint;
   this.headers = {};
@@ -17,40 +16,65 @@ function MethodFactory(url, method, endpoint) {
   return this;
 }
 
-MethodFactory.prototype.header = function(headerKey, headerValue) {
+Method.prototype.header = function(headerKey, headerValue) {
   this.headers[headerKey] = headerValue;
 
   return this;
 };
 
-MethodFactory.prototype.url = function(url) {
-  this._url = url
+Method.prototype.url = function(url) {
+  this._url = url;
 
   return this;
 };
 
-MethodFactory.prototype.merge = function(defaults, overrides) {
+Method.prototype.merge = function(defaults, overrides) {
   return _.extend({}, defaults, overrides);
 };
 
-MethodFactory.prototype.data = function(data) {
+Method.prototype.data = function(data) {
   this.endpoint.data = data;
 
   return this;
 };
 
-MethodFactory.prototype.send = function() {
+Method.prototype.massageResponse = function(_response) {
+  var response = {};
+
+  if(_response.xhr) {
+    /* Browser like response */
+    response.all = _response.xhr;
+    response.status = _response.xhr.status;
+
+    if(response.status < 300) {
+      response.body = JSON.parse(_response.xhr.response);
+    }
+
+    return response;
+  }
+
+  /* Node like response */
+  response.all = _response.res;
+  response.body = _response.res.body;
+  response.status = _response.res.statusCode;
+
+  return response;
+};
+
+Method.prototype.send = function() {
   var d = genDeferred();
   var requestObject = this.createRequestObject();
 
-  var handleResponse = function(response) {
-    if(response.xhr.status > 299) {
-      d.reject(response.xhr);
+  var handleResponse = function(data) {
+    var response = this.massageResponse(data);
+
+    if(response.status > 299) {
+      d.reject(response.all);
       return;
     }
 
     if(_.contains(['get', 'post', 'put', 'patch'], this.method)) {
-      this.endpoint.data = JSON.parse(response.xhr.response);
+      this.endpoint.data = response.body;
     }
 
     d.resolve(this.endpoint);
@@ -67,7 +91,7 @@ MethodFactory.prototype.send = function() {
   return d.promise;
 };
 
-MethodFactory.prototype.createRequestObject = function() {
+Method.prototype.createRequestObject = function() {
   var requestObject = request[this.method](this._url);
   var headers = this.merge(this.endpoint.headers, this.headers);
 
@@ -82,4 +106,4 @@ MethodFactory.prototype.createRequestObject = function() {
   return requestObject;
 };
 
-module.exports = MethodFactory;
+module.exports = Method;

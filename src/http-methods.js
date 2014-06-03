@@ -1,11 +1,11 @@
 'use strict';
 
-var MethodFactory = require('./method-factory');
+var Method = require('./http-method');
 
 
 var methodFactory = function(methodString) {
   var httpMethod = function(url) {
-    return new MethodFactory(url, methodString, this);
+    return new Method(url, methodString, this);
   };
 
   return httpMethod;
