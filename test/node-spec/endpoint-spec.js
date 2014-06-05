@@ -17,15 +17,16 @@ describe('method factory', function() {
       response = _response;
       done();
     }
-    endpoint = Endpoints.create('/endpoint/[someId]/[someName]')
+    endpoint = Endpoints.create('/endpoint/[someId]-[otherId]/[someName]')
       .methods(['get'])
       .domain('http://localhost:9000');
 
-    mock.get('/endpoint/123/chaz').reply(200);
+    mock.get('/endpoint/123-string-id/chaz').reply(200);
 
     endpoint.get()
     .param('someId', 123)
     .param('someName', 'chaz')
+    .param('otherId', 'string-id')
     .send()
     .then(capture, capture)
   });
