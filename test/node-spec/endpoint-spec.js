@@ -2,7 +2,6 @@
 
 var Endpoints = require('../../src/index');
 var chai = require('chai');
-var expect = chai.expect;
 var mock = require('./mock-server');
 
 
@@ -17,7 +16,8 @@ describe('method factory', function() {
       var capture = function(_response) {
         response = _response;
         done();
-      }
+      };
+
       endpoint = Endpoints.create()
         .methods(['get'])
         .domain('http://localhost:9000');
@@ -27,7 +27,7 @@ describe('method factory', function() {
       endpoint.get()
       .param('someId', 123)
       .send()
-      .then(capture, capture)
+      .then(capture, capture);
     });
 
     it('can make requests to the web root', function() {
@@ -40,7 +40,8 @@ describe('method factory', function() {
       var capture = function(_response) {
         response = _response;
         done();
-      }
+      };
+
       endpoint = Endpoints.create('/endpoint/[someId]-[otherId]/[someName]')
         .methods(['get'])
         .domain('http://localhost:9000');
@@ -52,7 +53,7 @@ describe('method factory', function() {
       .param('someName', 'chaz')
       .param('otherId', 'string-id')
       .send()
-      .then(capture, capture)
+      .then(capture, capture);
     });
 
     it('can insert parameters to the url', function() {

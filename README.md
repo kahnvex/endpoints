@@ -50,7 +50,6 @@ var myOtherEndpoint = new Endpoints.create('/users/[userId]-[username]')
   .methods(['get']);
 
 myOtherEndpoint.post()
-  .data({myData: 123})
   .param('userId', 123)
   .param('username', 'kahnjw')
   .send(); // GETs the URL: /users/123-kahnjw
