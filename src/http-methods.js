@@ -4,8 +4,8 @@ var Method = require('./http-method');
 
 
 var methodFactory = function(methodString) {
-  var httpMethod = function(url) {
-    return new Method(url, methodString, this);
+  var httpMethod = function() {
+    return new Method(methodString, this);
   };
 
   return httpMethod;

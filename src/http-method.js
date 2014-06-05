@@ -6,12 +6,11 @@ var agentQ = require('qagent');
 var request = require('superagent');
 
 
-function Method(url, method, endpoint) {
+function Method(method, endpoint) {
   this.method = method;
   this.endpoint = endpoint;
   this.headers = {};
-
-  this._url = url || this.endpoint._url;
+  this.params = {};
 
   return this;
 }
@@ -22,10 +21,37 @@ Method.prototype.header = function(headerKey, headerValue) {
   return this;
 };
 
-Method.prototype.url = function(url) {
-  this._url = url;
+Method.prototype.param = function(key, value) {
+  this.params[key] = value;
 
   return this;
+};
+
+Method.prototype.buildUrl = function() {
+  var domain = this.endpoint.getDomain();
+  var pattern = this.endpoint.getPattern();
+  var urlArray = [domain];
+  var urlString;
+
+  var pathArray = _.map(pattern, function(pathPart) {
+
+    _.each(this.params, function(paramValue, paramKey) {
+
+      var pattern = '[' + paramKey + ']';
+      if(pathPart.indexOf(pattern) > -1) {
+        pathPart = pathPart.replace(pattern, paramValue, 'g');
+      }
+
+    });
+
+    return pathPart;
+
+  }, this);
+
+  urlArray = urlArray.concat(pathArray);
+  urlString  = urlArray.join('/');
+
+  return urlString;
 };
 
 Method.prototype.merge = function(defaults, overrides) {
@@ -39,18 +65,16 @@ Method.prototype.data = function(data) {
 };
 
 Method.prototype.send = function() {
-  var deferred = Q.defer();
-  var requestObject = this.createRequestObject();
+  var requestObject;
 
-  agentQ.end(requestObject)
-  .then(deferred.resolve, deferred.reject)
-  .done();
+  requestObject = this.createRequestObject();
 
-  return deferred.promise;
+  return agentQ.end(requestObject);
 };
 
 Method.prototype.createRequestObject = function() {
-  var requestObject = request[this.method](this._url);
+  var url = this.buildUrl();
+  var requestObject = request[this.method](url);
   var headers = this.merge(this.endpoint.headers, this.headers);
 
   if(this._data) {

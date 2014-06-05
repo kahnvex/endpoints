@@ -49,6 +49,7 @@
   "dependencies": {
     "q": "1.x.x",
     "qagent": "0.0.1",
-    "superagent": "0.18.x"
+    "superagent": "0.18.x",
+    "path": "~0.4.9"
   }
 }
