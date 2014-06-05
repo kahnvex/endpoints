@@ -18,7 +18,7 @@ Use Endpoints to create an endpoint pattern, then call methods on that pattern a
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myEndpoint = new Endpoints.create('/some/url')
+var myEndpoint = new Endpoints.create('/some/url/pattern')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
@@ -27,7 +27,7 @@ var promiseCallback = function(response) {
   console.log(response);
 };
 
-myEndpoint.get
+myEndpoint.get()
   .send()
   .then(promiseCallback);
 ```
@@ -35,18 +35,23 @@ myEndpoint.get
 Sending data to the server is also easy
 
 ```javascript
-var Endpoints = require('endpointsjs');
-
-var myOtherEndpoint = new Endpoints.create('/some/other/url')
+var myOtherEndpoint = new Endpoints.create('/some/other/url/pattern')
   .methods(['options', 'post', 'delete']);
 
-var promiseCallback = function(response) {
-  console.log(response);
-};
-
-myOtherEndpoint.post
+myOtherEndpoint.post()
   .data({myData: 123})
-  .send()
-  .then(promiseCallback)
-  .done();
+  .send();
+```
+
+It is also possible to build a URL by passing arguments
+
+```javascript
+var myOtherEndpoint = new Endpoints.create('/users/[userId]-[username]')
+  .methods(['get']);
+
+myOtherEndpoint.post()
+  .data({myData: 123})
+  .param('userId', 123)
+  .param('username', 'kahnjw')
+  .send(); // GETs the URL: /users/123-kahnjw
 ```
