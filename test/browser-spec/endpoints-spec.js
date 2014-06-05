@@ -24,7 +24,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get
+      fakeEndpoint.get()
         .send()
         .then(responseHandler, responseHandler);
     });
@@ -35,34 +35,9 @@ describe('endpoints', function() {
     });
 
     it('generates the correct objects', function() {
-      fakeEndpoint.get.should.be.an.Object;
-      fakeEndpoint.delete.should.be.an.Object;
-      fakeEndpoint.patch.should.be.an.Object;
-    });
-  });
-
-  describe('override endpoint settings', function() {
-    var fakeEndpoint;
-    var response;
-
-    beforeEach(function(done) {
-      fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
-        .methods(['get']);
-
-      var complete = function(_response) {
-        response = _response;
-        done();
-      };
-
-      fakeEndpoint.get
-        .url('/base/test/data-2-fixture.json')
-        .send()
-        .then(complete, complete);
-    });
-
-    it('will override the endpoint url', function() {
-      JSON.parse(response.xhr.responseText)
-      .should.have.property('GET', 'all the things');
+      fakeEndpoint.get.should.be.a.Function;
+      fakeEndpoint.delete.should.be.a.Function;
+      fakeEndpoint.patch.should.be.a.Function;
     });
   });
 
@@ -79,7 +54,7 @@ describe('endpoints', function() {
         done();
       };
 
-      fakeEndpoint.get
+      fakeEndpoint.get()
         .send()
         .then(responseHandler);
     });
