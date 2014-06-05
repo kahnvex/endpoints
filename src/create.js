@@ -6,6 +6,7 @@ var _ = require('lodash');
 
 
 function Create(pattern) {
+  pattern = pattern || '';
   var pattern  = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
   this._domain = '';
