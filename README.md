@@ -50,8 +50,8 @@ promise
   console.log(text);
   return text;
 })
-.done(function(data) {
-  // Do stuff with the data
+.done(function(text) {
+  // Do stuff with the text
 });
 
 // Or, for brevity, you can do
