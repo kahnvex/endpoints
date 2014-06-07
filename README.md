@@ -22,15 +22,11 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
-var print = function(text) {
-  console.log(text);
-};
-
 myEndpoint.get()
   .send() // Returns an Q Promise (Promises/A+)
   .get('xhr')
   .get('responseText')
-  .then(print);
+  .done(console.log);
 ```
 
 Sending data to the server is also easy
