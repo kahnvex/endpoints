@@ -22,14 +22,15 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
-
-var promiseCallback = function(response) {
-  console.log(response);
+var print = function(text) {
+  console.log(text);
 };
 
 myEndpoint.get()
   .send()
-  .then(promiseCallback);
+  .get(xhr)
+  .get(responseText)
+  .then(print);
 ```
 
 Sending data to the server is also easy
