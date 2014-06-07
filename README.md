@@ -80,14 +80,6 @@ myOtherEndpoint.post()
   done();
 ```
 
-var myOtherEndpoint = new Endpoints.create('/some/other/url')
-  .methods(['options', 'post', 'delete']);
-
-myOtherEndpoint.post()
-  .data({myData: 123})
-  .send();
-```
-
 It is also possible to build a URL by passing arguments
 
 ```javascript
