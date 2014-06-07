@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var agentQ = require('qagent');
 var request = require('superagent');
+var requestAdapter = require('requestadapter');
 
 
 function Method(method, endpoint) {
@@ -66,7 +67,8 @@ Method.prototype.data = function(data) {
 Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
-  return agentQ.end(requestObject);
+  return agentQ.end(requestObject)
+    .then(requestAdapter);
 };
 
 Method.prototype.createRequestObject = function() {

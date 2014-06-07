@@ -26,8 +26,7 @@ describe('endpoints', function() {
     it('returns a response object', function(done) {
       fakeEndpoint.get()
         .send()
-        .get('xhr')
-        .get('status')
+        .invoke('status')
         .should.eventually.equal(200)
         .notify(done);
     });
@@ -53,16 +52,14 @@ describe('endpoints', function() {
 
     it('returns an error with a status, when received form server', function(done) {
       promise
-      .get('xhr')
-      .get('status')
+      .invoke('status')
       .should.eventually.equal(404)
       .notify(done);
     });
 
     it('returns an error with responseText', function(done) {
       promise
-      .get('xhr')
-      .get('responseText')
+      .invoke('text')
       .should.eventually.equal('NOT FOUND')
       .notify(done);
     });

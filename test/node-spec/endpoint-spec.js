@@ -26,8 +26,7 @@ describe('method factory', function() {
 
     it('can make requests to the web root', function(done) {
       promise
-      .get('res')
-      .get('statusCode')
+      .invoke('status')
       .should.eventually.equal(200)
       .notify(done);
     });
@@ -51,8 +50,7 @@ describe('method factory', function() {
 
     it('can insert parameters to the url', function(done) {
       promise
-      .get('res')
-      .get('statusCode')
+      .invoke('status')
       .should.eventually.equal(200)
       .notify(done);
     });

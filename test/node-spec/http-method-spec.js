@@ -45,8 +45,7 @@ describe('method factory', function() {
 
     it('returns a response after request is completed', function(done) {
       promise
-      .get('res')
-      .get('statusCode')
+      .invoke('status')
       .should.eventually.equal(200)
       .notify(done);
     });
