@@ -1,7 +1,11 @@
 'use strict';
 
-require('should');
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
 require('./bind-polyfill');
+
+chai.should();
+chai.use(chaiAsPromised);
 
 var Endpoints = require('../../src/index');
 
@@ -13,25 +17,19 @@ describe('endpoints', function() {
 
   describe('using an endpoint pattern', function() {
     var fakeEndpoint;
-    var response;
 
-    beforeEach(function(done) {
+    beforeEach(function() {
       fakeEndpoint = Endpoints.create('/base/test/data-1-fixture.json')
         .methods(['get', 'patch', 'delete']);
-
-      var responseHandler = function(_response) {
-        response = _response;
-        done();
-      };
-
-      fakeEndpoint.get()
-        .send()
-        .then(responseHandler, responseHandler);
     });
 
-    it('returns a response object', function() {
-      response.should.have.property('req');
-      response.should.have.property('xhr');
+    it('returns a response object', function(done) {
+      fakeEndpoint.get()
+        .send()
+        .get('xhr')
+        .get('status')
+        .should.eventually.equal(200)
+        .notify(done);
     });
 
     it('generates the correct objects', function() {
@@ -42,29 +40,31 @@ describe('endpoints', function() {
   });
 
   describe('error behavior', function() {
-    var response;
     var fakeEndpoint;
+    var promise;
 
-    beforeEach(function(done) {
+    beforeEach(function() {
       fakeEndpoint = Endpoints.create('/404/url')
-        .methods(['get']);
+        .methods('get');
 
-      var responseHandler = function(_response) {
-        response = _response;
-        done();
-      };
-
-      fakeEndpoint.get()
-        .send()
-        .then(responseHandler);
+      promise = fakeEndpoint.get()
+        .send();
     });
 
-    it('returns an error with a status, when received form server', function() {
-      response.xhr.status.should.be.exactly(404);
+    it('returns an error with a status, when received form server', function(done) {
+      promise
+      .get('xhr')
+      .get('status')
+      .should.eventually.equal(404)
+      .notify(done);
     });
 
-    it('returns an error with responseText', function() {
-      response.xhr.responseText.should.be.exactly('NOT FOUND');
+    it('returns an error with responseText', function(done) {
+      promise
+      .get('xhr')
+      .get('responseText')
+      .should.eventually.equal('NOT FOUND')
+      .notify(done);
     });
   });
 });

@@ -22,14 +22,11 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
-
-var promiseCallback = function(response) {
-  console.log(response);
-};
-
 myEndpoint.get()
-  .send()
-  .then(promiseCallback);
+  .send() // Returns an Q Promise (Promises/A+)
+  .get('xhr')
+  .get('responseText')
+  .done(console.log);
 ```
 
 Sending data to the server is also easy
@@ -47,7 +44,7 @@ It is also possible to build a URL by passing arguments
 
 ```javascript
 var myOtherEndpoint = new Endpoints.create('/users/[userId]-[username]')
-  .methods(['get']);
+  .methods('get');
 
 myOtherEndpoint.post()
   .param('userId', 123)
