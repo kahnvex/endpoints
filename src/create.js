@@ -1,6 +1,6 @@
 'use strict';
 
-var httpMethods = require('./http-methods');
+var httpMethodHelper = require('./http-method-helper');
 var _ = require('lodash');
 
 
@@ -30,7 +30,7 @@ Create.prototype.methods = function(methodList){
   }
 
   _.each(methodList, function(method){
-    this[method] = _.bind(httpMethods[method], this);
+    this[method] = _.bind(httpMethodHelper, this)(method);
   }, this);
 
   return this;
