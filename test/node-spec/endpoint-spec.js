@@ -43,7 +43,7 @@ describe('method factory', function() {
       };
 
       endpoint = Endpoints.create('/endpoint/[someId]-[otherId]/[someName]')
-        .methods(['get'])
+        .methods('get')
         .domain('http://localhost:9000');
 
       mock.get('/endpoint/123-string-id/chaz').reply(200);

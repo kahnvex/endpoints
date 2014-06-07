@@ -25,6 +25,10 @@ Create.prototype.domain = function(domain) {
 };
 
 Create.prototype.methods = function(methodList){
+  if(_.isString(methodList)) {
+    methodList = [methodList];
+  }
+
   _.each(methodList, function(method){
     this[method] = _.bind(httpMethods[method], this);
   }, this);

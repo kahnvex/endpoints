@@ -47,7 +47,7 @@ describe('endpoints', function() {
 
     beforeEach(function(done) {
       fakeEndpoint = Endpoints.create('/404/url')
-        .methods(['get']);
+        .methods('get');
 
       var responseHandler = function(_response) {
         response = _response;
