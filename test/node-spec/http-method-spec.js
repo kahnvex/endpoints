@@ -2,12 +2,12 @@
 
 var Method = require('../../src/http-method');
 var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
 var mock = require('./mock-server');
-var expect = chai.expect;
-
 
 
 chai.should();
+chai.use(chaiAsPromised);
 
 describe('method factory', function() {
   var method;
@@ -35,25 +35,20 @@ describe('method factory', function() {
   });
 
   describe('sending requests to the server', function() {
-    var response;
+    var promise;
 
-    beforeEach(function(done) {
-      var capture = function(_data) {
-        response = _data;
-        done();
-      };
-
+    beforeEach(function() {
       mock.get('/').reply(200, {});
 
-      method
-      .send()
-      .then(capture, capture);
+      promise = method.send();
     });
 
-    it('returns a response after request is completed', function() {
-      expect(response).to.have.property('req');
-      expect(response).to.have.property('res');
-      response.res.statusCode.should.equal(200);
+    it('returns a response after request is completed', function(done) {
+      promise
+      .get('res')
+      .get('statusCode')
+      .should.eventually.equal(200)
+      .notify(done);
     });
   });
 });

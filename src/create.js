@@ -1,12 +1,12 @@
 'use strict';
 
 var httpMethods = require('./http-methods');
-var path = require('path');
 var _ = require('lodash');
 
 
 function Create(pattern) {
-  var pattern  = this.removeLeadingSlash(pattern);
+  pattern = pattern || '';
+  pattern  = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
   this._domain = '';
 }
@@ -14,7 +14,7 @@ function Create(pattern) {
 Create.prototype.headers = {};
 
 Create.prototype.pattern = function(pattern) {
-  var pattern = this.removeLeadingSlash(pattern);
+  pattern = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
 };
 
@@ -25,6 +25,10 @@ Create.prototype.domain = function(domain) {
 };
 
 Create.prototype.methods = function(methodList){
+  if(_.isString(methodList)) {
+    methodList = [methodList];
+  }
+
   _.each(methodList, function(method){
     this[method] = _.bind(httpMethods[method], this);
   }, this);

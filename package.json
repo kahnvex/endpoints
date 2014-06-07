@@ -29,7 +29,7 @@
     "jshint": "2.5.x",
     "karma": "0.12.x",
     "browserify": "4.1.x",
-    "karma-browserify": "0.2.x",
+    "karma-browserifast": "0.6.x",
     "karma-mocha": "0.1.x",
     "karma-phantomjs-launcher": "0.1.x",
     "karma-cli": "0.0.x",
@@ -43,8 +43,10 @@
     "gulp-shell": "0.2.x",
     "gulp-mocha": "0.4.x",
     "shmock": "0.7.x",
-    "chai": "1.9.x",
-    "gulp-jshint": "1.6.x"
+    "chai": "~1.9.1",
+    "gulp-jshint": "1.6.x",
+    "karma-spec-reporter": "0.0.13",
+    "chai-as-promised": "~4.1.1"
   },
   "dependencies": {
     "q": "1.x.x",
