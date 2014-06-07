@@ -17,7 +17,7 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
 
 myEndpoint.get()
   .send()          // Returns an Q Promise (Promises/A+)
-  .invoke('text')  // You may invode any method a RequestAdapter implements
+  .invoke('text')  // You may invoke any method a RequestAdapter implements
   .done(console.log);
 ```
 
