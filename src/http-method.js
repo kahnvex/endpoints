@@ -64,9 +64,7 @@ Method.prototype.data = function(data) {
 };
 
 Method.prototype.send = function() {
-  var requestObject;
-
-  requestObject = this.createRequestObject();
+  var requestObject = this.createRequestObject();
 
   return agentQ.end(requestObject);
 };
