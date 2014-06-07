@@ -27,7 +27,7 @@ var print = function(text) {
 };
 
 myEndpoint.get()
-  .send()
+  .send() // Returns an [Q Promise](https://github.com/kriskowal/q) ([Promises/A+](http://promises-aplus.github.io/promises-spec/))
   .get('xhr')
   .get('responseText')
   .then(print);
