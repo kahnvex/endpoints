@@ -3,7 +3,24 @@ Endpoints
 
 [![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
 
-Simple helper library for your REST service clients.
+Simple helper library for HTTP service clients. Endpoints works in the browser
+and in Node.
+
+## tl;dr
+
+```javascript
+var Endpoints = require('endpointsjs');
+
+var myEndpoint = new Endpoints.create('/some/url/pattern')
+  .header('Content-Type', 'application/json')
+  .methods(['get', 'post']);
+
+myEndpoint.get()
+  .send() // Returns an Q Promise (Promises/A+)
+  .get('xhr')
+  .get('responseText')
+  .done(console.log);
+```
 
 ## Install it
 
@@ -22,20 +39,46 @@ var myEndpoint = new Endpoints.create('/some/url')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
+var promise = myEndpoint.get()
+  .send(); // Returns an Q Promise (Promises/A+)
 
-var promiseCallback = function(response) {
-  console.log(response);
-};
+// In Node you can do something like this
+promise
+.get('res')
+.get('responseText')
+.then(function(text) {
+  console.log(text);
+  return text;
+})
+.done(function(data) {
+  // Do stuff with the data
+});
 
-myEndpoint.get
-  .send()
-  .then(promiseCallback);
+// Or, for brevity, you can do
+promise
+.get('res')
+.get('responseText')
+.done(console.log);
+
+// In the browser response objects are a little different
+promise
+.get('xhr')
+.get('text')
+.done(console.log);
 ```
 
 Sending data to the server is also easy
 
 ```javascript
-var Endpoints = require('endpointsjs');
+var myOtherEndpoint = new Endpoints.create('/some/other/url/pattern')
+  .methods(['options', 'post', 'delete']);
+
+myOtherEndpoint.post()
+  .data({myData: 123})
+  .send()
+  ...
+  done();
+```
 
 var myOtherEndpoint = new Endpoints.create('/some/other/url')
   .methods(['options', 'post', 'delete']);
@@ -44,9 +87,11 @@ var promiseCallback = function(response) {
   console.log(response);
 };
 
-myOtherEndpoint.post
-  .data({myData: 123})
-  .send()
-  .then(promiseCallback)
+
+myOtherEndpoint.post()
+  .param('userId', 123)
+  .param('username', 'kahnjw')
+  .send() // GETs the URL: /users/123-kahnjw
+  ...
   .done();
 ```
