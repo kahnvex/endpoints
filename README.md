@@ -47,7 +47,7 @@ It is also possible to build a URL by passing arguments
 
 ```javascript
 var myOtherEndpoint = new Endpoints.create('/users/[userId]-[username]')
-  .methods(['get']);
+  .methods('get');
 
 myOtherEndpoint.post()
   .param('userId', 123)

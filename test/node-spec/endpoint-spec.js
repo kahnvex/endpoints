@@ -3,61 +3,58 @@
 var Endpoints = require('../../src/index');
 var chai = require('chai');
 var mock = require('./mock-server');
+var chaiAsPromised = require('chai-as-promised');
 
 
 chai.should();
+chai.use(chaiAsPromised);
 
 describe('method factory', function() {
-  var endpoint;
-  var response;
+  var promise;
 
   describe('bare bones behavior', function() {
-    beforeEach(function(done) {
-      var capture = function(_response) {
-        response = _response;
-        done();
-      };
-
-      endpoint = Endpoints.create()
+    beforeEach(function() {
+      var endpoint = Endpoints.create()
         .methods(['get'])
         .domain('http://localhost:9000');
 
       mock.get('/').reply(200);
-
-      endpoint.get()
-      .param('someId', 123)
-      .send()
-      .then(capture, capture);
+      promise = endpoint.get()
+        .param('someId', 123)
+        .send();
     });
 
-    it('can make requests to the web root', function() {
-      response.res.statusCode.should.equal(200);
+    it('can make requests to the web root', function(done) {
+      promise
+      .get('res')
+      .get('statusCode')
+      .should.eventually.equal(200)
+      .notify(done);
     });
   });
 
   describe('parameter insertion', function() {
-    beforeEach(function(done) {
-      var capture = function(_response) {
-        response = _response;
-        done();
-      };
+    var promise;
 
-      endpoint = Endpoints.create('/endpoint/[someId]-[otherId]/[someName]')
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint/[someId]-[otherId]/[someName]')
         .methods('get')
         .domain('http://localhost:9000');
 
       mock.get('/endpoint/123-string-id/chaz').reply(200);
-
-      endpoint.get()
-      .param('someId', 123)
-      .param('someName', 'chaz')
-      .param('otherId', 'string-id')
-      .send()
-      .then(capture, capture);
+      promise = endpoint.get()
+        .param('someId', 123)
+        .param('someName', 'chaz')
+        .param('otherId', 'string-id')
+        .send();
     });
 
-    it('can insert parameters to the url', function() {
-      response.res.statusCode.should.equal(200);
+    it('can insert parameters to the url', function(done) {
+      promise
+      .get('res')
+      .get('statusCode')
+      .should.eventually.equal(200)
+      .notify(done);
     });
   });
 });
