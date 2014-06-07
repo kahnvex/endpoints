@@ -21,7 +21,8 @@ module.exports = function(config) {
         served:  true,
         included: false
       }
-    ]
+    ],
+    singleRun: true
   };
 
   config.set(configuration);
