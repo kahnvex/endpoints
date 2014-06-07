@@ -28,8 +28,8 @@ var print = function(text) {
 
 myEndpoint.get()
   .send()
-  .get(xhr)
-  .get(responseText)
+  .get('xhr')
+  .get('responseText')
   .then(print);
 ```
 
