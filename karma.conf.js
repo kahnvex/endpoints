@@ -6,16 +6,17 @@ module.exports = function(config) {
     frameworks: ['mocha', 'browserify'],
     browsers: ['PhantomJS'],
     preprocessors: {
-      'test/*-spec.js': ['browserify']
+      '/**/*.browserify': 'browserify'
     },
     browserify: {
+      files: ['test/browser-spec/*-spec.js'],
       debug: true,
       watch: true
     },
+    reporters: ['spec'],
     files: [
-      'test/*-spec.js',
       {
-        pattern: 'test/*.json',
+        pattern: 'test/**/*.json',
         watched: true,
         served:  true,
         included: false

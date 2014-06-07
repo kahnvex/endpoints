@@ -3,7 +3,24 @@ Endpoints
 
 [![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
 
-Simple helper library for your REST service clients.
+Simple helper library for HTTP service clients. Endpoints works in the browser
+and in Node.
+
+## tl;dr
+
+```javascript
+var Endpoints = require('endpointsjs');
+
+var myEndpoint = new Endpoints.create('/some/url/pattern')
+  .header('Content-Type', 'application/json')
+  .methods(['get', 'post']);
+
+myEndpoint.get()
+  .send() // Returns an Q Promise (Promises/A+)
+  .get('xhr')
+  .get('responseText')
+  .done(console.log);
+```
 
 ## Install it
 
@@ -13,66 +30,66 @@ npm install endpointsjs
 
 ## Usage
 
-Use Endpoints to create an endpoint pattern, then call methods on that pattern to get promises back. Simple as that.
+Use Endpoints to create an endpoint pattern, then call methods on that pattern and get promises back. No pyramid of doom. Code over configuration.
 
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myEndpoint = new Endpoints.GetPost({
-  url: '/some/url',
-  dataType: 'json'
+var myEndpoint = new Endpoints.create('/some/url/pattern')
+  .header('Content-Type', 'application/json')
+  .methods(['get', 'post']);
+
+var promise = myEndpoint.get()
+  .send(); // Returns an Q Promise (Promises/A+)
+
+// In Node you can do something like this
+promise
+.get('res')
+.get('responseText')
+.then(function(text) {
+  console.log(text);
+  return text;
+})
+.done(function(text) {
+  // Do stuff with the text
 });
 
-var promiseCallback = function(endpoint) {
-  console.log(endpoint.data);
-  assert(endpoint === myEndpoint);
-};
+// Or, for brevity, you can do
+promise
+.get('res')
+.get('responseText')
+.done(console.log);
 
-myEndpoint.get()
-.then(promiseCallback);
+// In the browser response objects are a little different
+promise
+.get('xhr')
+.get('text')
+.done(console.log);
 ```
 
-It is also possible to create a custom endpoint pattern.
+Sending data to the server is also easy
 
 ```javascript
-var Endpoints = require('endpointsjs');
+var myOtherEndpoint = new Endpoints.create('/some/other/url/pattern')
+  .methods(['options', 'post', 'delete']);
 
-var myOtherEndpoint = new Endpoints.Custom({
-  url: '/some/other/url',
-  methodList: ['options', 'post', 'delete']
-});
-
-var promiseCallback = function(endpoint) {
-  console.log(endpoint.data);
-};
-
-myOtherEndpoint.post({data: {myData: 123}})
-.then(promiseCallback)
-.then(myOtherEndpoint.delete);
+myOtherEndpoint.post()
+  .data({myData: 123})
+  .send()
+  ...
+  done();
 ```
 
-Underneath Endpoints is using [jQuery.ajax](http://api.jquery.com/jquery.ajax/), so the options hash sent to
-Endpoints.Whatever will take any valid [jQuery.ajax](http://api.jquery.com/jquery.ajax/) option.
+It is also possible to build a URL by passing arguments
 
-### Available Endpoint Patterns
+```javascript
+var myOtherEndpoint = new Endpoints.create('/users/[userId]-[username]')
+  .methods('get');
 
+myOtherEndpoint.post()
+  .param('userId', 123)
+  .param('username', 'kahnjw')
+  .send() // GETs the URL: /users/123-kahnjw
+  ...
+  .done();
 ```
-GetPost [GET, POST, OPTIONS]
-GetPutDelete [GET, PUT, DELETE, OPTIONS]
-GetPut [GET, PUT, OPTIONS]
-Custom options.methodList
-```
-
-### Is Endpoints Right for my API?
-
-Endpoints makes assumptions about APIs and Services. Most of these assumptions
-are derived from the [REST style architecture](http://www.restapitutorial.com/).
-Here is a list of them:
-* APIs are stateless
-* API endpoints return a resource representation after GET, POST, or PUT
-* Content-Type is specified in the response
-* Your API makes JSON and/or XML first class citizens
-
-If your API does not closely follow REST, Endpoints probably isn't right for you.
-
-If your API closely follows REST, have fun.
