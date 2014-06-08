@@ -109,7 +109,7 @@ If new features are added or a bug is fixed, please cover them with new tests.
 
 ### Footprint
 
-Also keep in mind this library is targeting both browser and Node environments
+Keep in mind this library is targeting both browser and Node environments
 so keeping the footprint down is good. To help with this there is a `footprint`
 task:
 
