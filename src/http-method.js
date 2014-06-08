@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var agentQ = require('qagent');
 var request = require('superagent');
-var requestAdapter = require('requestadapter');
 
 
 function Method(method, endpoint) {
@@ -11,6 +10,7 @@ function Method(method, endpoint) {
   this.endpoint = endpoint;
   this.headers = {};
   this.params = {};
+  this._promisePermutations = this.endpoint._promisePermutations;
 
   return this;
 }
@@ -70,11 +70,22 @@ Method.prototype.query = function(query) {
   return this;
 };
 
+Method.prototype.promiseApply = function(permutationFunction) {
+  this._promisePermutations.push(permutationFunction);
+
+  return this;
+};
+
 Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
-  return agentQ.end(requestObject)
-    .then(requestAdapter);
+  var promise = agentQ.end(requestObject);
+
+  _.each(this._promisePermutations, function(permutationFunction) {
+    promise = promise.then(permutationFunction);
+  });
+
+  return promise;
 };
 
 Method.prototype.createRequestObject = function() {

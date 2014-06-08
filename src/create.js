@@ -1,6 +1,7 @@
 'use strict';
 
 var httpMethodHelper = require('./http-method-helper');
+var requestAdapter = require('requestadapter');
 var _ = require('lodash');
 
 
@@ -9,6 +10,7 @@ function Create(pattern) {
   pattern  = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
   this._domain = '';
+  this._promisePermutations = [requestAdapter];
 }
 
 Create.prototype.headers = {};
@@ -20,6 +22,12 @@ Create.prototype.pattern = function(pattern) {
 
 Create.prototype.domain = function(domain) {
   this.setDomain(domain);
+
+  return this;
+};
+
+Create.prototype.promiseApply = function(permutationFunction) {
+  this._promisePermutations.push(permutationFunction);
 
   return this;
 };
