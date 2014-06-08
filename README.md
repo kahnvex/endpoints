@@ -4,7 +4,7 @@ Endpoints
 [![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
 
 Simple helper library for HTTP service clients. Endpoints works in the browser
-and in Node.
+and in Node, using [RequestAdapter](https://github.com/kahnjw/RequestAdapter/) to expose a common interface for Request Response objects.
 
 View the [Endpoints API Reference](https://github.com/kahnjw/endpoints/wiki/Endpoints-API-Reference/_edit).
 
@@ -18,9 +18,8 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
   .methods(['get', 'post']);
 
 myEndpoint.get()
-  .send() // Returns an Q Promise (Promises/A+)
-  .get('xhr')
-  .get('responseText')
+  .send()          // Returns an Q Promise (Promises/A+)
+  .invoke('text')  // You may invoke any method a RequestAdapter implements
   .done(console.log);
 ```
 
@@ -44,28 +43,18 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
 var promise = myEndpoint.get()
   .send(); // Returns an Q Promise (Promises/A+)
 
-// In Node you can do something like this
+// You can do something like this
 promise
-.get('res')
-.get('responseText')
-.then(function(text) {
-  console.log(text);
-  return text;
+.then(function(requestAdapter) {
+  return requestAdapter.text();
 })
 .done(function(text) {
-  // Do stuff with the text
+  console.log(text);
 });
 
-// Or, for brevity, you can do
+// Which is equivalent to
 promise
-.get('res')
-.get('responseText')
-.done(console.log);
-
-// In the browser response objects are a little different
-promise
-.get('xhr')
-.get('text')
+.invoke('text')
 .done(console.log);
 ```
 
