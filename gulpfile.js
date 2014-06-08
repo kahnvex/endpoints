@@ -41,10 +41,6 @@ gulp.task('browserspec', function() {
   return browserspec();
 });
 
-gulp.task('nodespec_noext', function() {
-  return nodespec();
-});
-
 gulp.task('nodespec', function() {
   return nodespec();
 });
