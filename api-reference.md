@@ -48,6 +48,27 @@ Add a function to permute all request promises. This will be applied to every re
 endpoint.thenApply(onFullfilled, onError, onProgres);
 ```
 
+This is useful if you know that you always want to permute a request promise in a
+certain way. If you are only interested in the body of the response, you might
+use `thenApply` to permute the promise to only give you the body, like this:
+
+```javascript
+var getBody = function(requestAdapter) {
+  return requestAdapter.responseObject();
+};
+var passError = function(error) {
+  throw error;
+};
+endpoint.thenApply(getBody, passError);
+
+// Now the endpoint can be used in a way that assumes the response object
+// is always passed to the onFullfilled function.
+endpoint
+.get()
+.send()
+.done(console.log);
+```
+
 ## endpoint.get()
 
 Returns a get `method`. The `method` must be specified by `endpoint.methods(method | [methods])`.
