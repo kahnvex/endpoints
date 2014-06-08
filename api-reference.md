@@ -40,6 +40,15 @@ Set an HTTP request header. Returns the `endpoint`.
 endpoint.set('Content-Type', 'application/json');
 ```
 
+## endpoint.thenApply(onFullfilled, onError, onProgress)
+
+Add a function to permute the promise. This will be applied to every request
+promise ahead of time by calling promise.then(onFullfilled, onError, onProgress)
+
+```javascript
+endpoint.domain('http://google.com');
+```
+
 ## endpoint.get()
 
 Returns a get `method`. The `method` must be specified by `endpoint.methods(method | [methods])`.

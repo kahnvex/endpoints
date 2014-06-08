@@ -10,7 +10,7 @@ function Method(method, endpoint) {
   this.endpoint = endpoint;
   this.headers = {};
   this.params = {};
-  this._promisePermutations = this.endpoint._promisePermutations;
+  this.thenApplies = this.endpoint.thenApplies;
 
   return this;
 }
@@ -70,8 +70,14 @@ Method.prototype.query = function(query) {
   return this;
 };
 
-Method.prototype.promiseApply = function(permutationFunction) {
-  this._promisePermutations.push(permutationFunction);
+Method.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
+  var thenApply = {
+    onFulfilled: onFulfilled,
+    onRejected: onRejected,
+    onProgress: onProgress
+  };
+
+  this.thenApplies.push(thenApply);
 
   return this;
 };
@@ -81,8 +87,12 @@ Method.prototype.send = function() {
 
   var promise = agentQ.end(requestObject);
 
-  _.each(this._promisePermutations, function(permutationFunction) {
-    promise = promise.then(permutationFunction);
+  _.each(this.thenApplies, function(thenApply) {
+    promise = promise.then(
+      thenApply.onFulfilled,
+      thenApply.onRejected,
+      thenApply.onProgress
+    );
   });
 
   return promise;

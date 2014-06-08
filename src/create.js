@@ -6,11 +6,16 @@ var _ = require('lodash');
 
 
 function Create(pattern) {
+  var passThrough = function(value) {
+    return value;
+  };
+
+  this.thenApplies = [];
+  this.thenApply(requestAdapter, passThrough, passThrough);
   pattern = pattern || '';
   pattern  = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
   this._domain = '';
-  this._promisePermutations = [requestAdapter];
 }
 
 Create.prototype.headers = {};
@@ -26,8 +31,14 @@ Create.prototype.domain = function(domain) {
   return this;
 };
 
-Create.prototype.promiseApply = function(permutationFunction) {
-  this._promisePermutations.push(permutationFunction);
+Create.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
+  var thenApply = {
+    onFulfilled: onFulfilled,
+    onRejected: onRejected,
+    onProgress: onProgress
+  };
+
+  this.thenApplies.push(thenApply);
 
   return this;
 };

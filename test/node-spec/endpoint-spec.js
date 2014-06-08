@@ -48,7 +48,7 @@ describe('endpoints', function() {
 
       var endpoint = Endpoints.create()
         .methods('get')
-        .promiseApply(permutation)
+        .thenApply(permutation)
         .domain('http://localhost:9000');
 
       mock.get('/').reply(200, 'If you didn\'t know');
