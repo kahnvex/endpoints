@@ -42,11 +42,10 @@ endpoint.set('Content-Type', 'application/json');
 
 ## endpoint.thenApply(onFullfilled, onError, onProgress)
 
-Add a function to permute the promise. This will be applied to every request
-promise ahead of time by calling promise.then(onFullfilled, onError, onProgress)
+Add a function to permute all request promises. This will be applied to every request promise ahead of time by calling promise.then(onFullfilled, onError, onProgress)
 
 ```javascript
-endpoint.domain('http://google.com');
+endpoint.thenApply(onFullfilled, onError, onProgres);
 ```
 
 ## endpoint.get()
@@ -110,6 +109,13 @@ getMethod
 .send(); // Sends a GET to /users/1234
 ```
 
+## method.thenApply(onFullfilled, onError, onProgress)
+
+Add a function to permute the request promise.
+
+```javascript
+method.thenApply(onFullfilled, onError, onProgres);
+```
 
 ## method.send()
 
