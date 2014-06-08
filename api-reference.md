@@ -76,6 +76,14 @@ endpoint
 .done(console.log);
 ```
 
+`thenApply` may also be called on a method, like this:
+
+```
+endpoint.post.thenApply(onFullfilled, onError, onProgres);
+```
+
+This allows for permutations specific to an HTTP method that the endpoint implements. `thenApplies` are ordered from least specific to most specific. More specifically, permutations specified on the endpoint will be applied _before_ permutations specified on a method of that endpoint.
+
 ## endpoint.get()
 
 Returns a get `method`. The `method` must be specified by `endpoint.methods(method | [methods])`.
