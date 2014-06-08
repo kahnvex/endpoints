@@ -4,6 +4,16 @@ var httpMethodHelper = require('./http-method-helper');
 var requestAdapter = require('requestadapter');
 var _ = require('lodash');
 
+var floatingThenApply = function(onFulfilled, onRejected, onProgress) {
+  var applies = {
+    onFulfilled: onFulfilled,
+    onRejected: onRejected,
+    onProgress: onProgress
+  };
+  this.thenApplies.push(applies);
+
+  return this;
+};
 
 function Create(pattern) {
   var passThroughError = function(error) {
@@ -36,15 +46,8 @@ Create.prototype.domain = function(domain) {
 };
 
 Create.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
-  var thenApply = {
-    onFulfilled: onFulfilled,
-    onRejected: onRejected,
-    onProgress: onProgress
-  };
-
-  this.thenApplies.push(thenApply);
-
-  return this;
+  var createThenApply = _.bind(floatingThenApply, this);
+  return createThenApply(onFulfilled, onRejected, onProgress);
 };
 
 Create.prototype.methods = function(methodList){
@@ -54,6 +57,9 @@ Create.prototype.methods = function(methodList){
 
   _.each(methodList, function(method){
     this[method] = _.bind(httpMethodHelper, this)(method);
+
+    this[method].thenApplies = [];
+    this[method].thenApply = _.bind(floatingThenApply, this[method]);
   }, this);
 
   return this;

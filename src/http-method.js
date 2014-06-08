@@ -5,12 +5,13 @@ var agentQ = require('qagent');
 var request = require('superagent');
 
 
-function Method(method, endpoint) {
-  this.method = method;
-  this.endpoint = endpoint;
-  this.headers = {};
+function Method(method, endpointConfig) {
   this.params = {};
-  this.thenApplies = this.endpoint.thenApplies;
+  this.method = method;
+  this.headers = endpointConfig.headers || {};
+  this.thenApplies = endpointConfig.thenApplies || [];
+  this.domain = endpointConfig.domain || '';
+  this.pattern = endpointConfig.pattern || '/';
 
   return this;
 }
@@ -28,8 +29,8 @@ Method.prototype.param = function(key, value) {
 };
 
 Method.prototype.buildUrl = function() {
-  var domain = this.endpoint.getDomain();
-  var pattern = this.endpoint.getPattern();
+  var domain = this.domain;
+  var pattern = this.pattern;
   var urlArray = [domain];
   var urlString;
 
@@ -52,10 +53,6 @@ Method.prototype.buildUrl = function() {
   urlString  = urlArray.join('/');
 
   return urlString;
-};
-
-Method.prototype.merge = function(defaults, overrides) {
-  return _.extend({}, defaults, overrides);
 };
 
 Method.prototype.data = function(data) {
@@ -101,7 +98,6 @@ Method.prototype.send = function() {
 Method.prototype.createRequestObject = function() {
   var url = this.buildUrl();
   var requestObject = request[this.method](url);
-  var headers = this.merge(this.endpoint.headers, this.headers);
 
   if(this._data) {
     requestObject.send(this._data);
@@ -111,7 +107,7 @@ Method.prototype.createRequestObject = function() {
     requestObject.query(this._query);
   }
 
-  _.each(headers, function(headerValue, headerName) {
+  _.each(this.headers, function(headerValue, headerName) {
     requestObject.set(headerName, headerValue);
   }, this);
 

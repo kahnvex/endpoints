@@ -40,7 +40,7 @@ describe('endpoints', function() {
     });
   });
 
-  describe('promise permutation onFullfilled', function() {
+  describe('promise permutation on the endpoint object', function() {
     beforeEach(function() {
       var permutation = function(requestAdapter) {
         return requestAdapter.text() + ' now you know';
@@ -59,6 +59,56 @@ describe('endpoints', function() {
     it('permutes the promise with a specified permutation', function(done) {
       promise
       .should.eventually.equal('If you didn\'t know now you know')
+      .notify(done);
+    });
+  });
+
+  describe('promise permutation on the method object', function() {
+    beforeEach(function() {
+      var permutation = function(requestAdapter) {
+        return requestAdapter.text() + ' now you know';
+      };
+
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .domain('http://localhost:9000');
+
+      endpoint.get.thenApply(permutation);
+
+      mock.get('/').reply(200, 'If you didn\'t know');
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('permutes the promise with a specified method permutation', function(done) {
+      promise
+      .should.eventually.equal('If you didn\'t know now you know')
+      .notify(done);
+    });
+  });
+
+  describe('promise permutation ordering', function() {
+    beforeEach(function() {
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .thenApply(function(requestAdapter) {
+          var num = Number(requestAdapter.text());
+          return num * 2;
+        })
+        .domain('http://localhost:9000');
+
+      endpoint.get.thenApply(function(num) {
+        return num + 5;
+      });
+
+      mock.get('/').reply(200, '3');
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('orders permutation from least specific to most', function(done) {
+      promise
+      .should.eventually.equal(11)
       .notify(done);
     });
   });
