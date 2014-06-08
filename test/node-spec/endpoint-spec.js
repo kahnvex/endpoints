@@ -9,7 +9,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.should();
 chai.use(chaiAsPromised);
 
-describe('method factory', function() {
+describe('endpoints', function() {
   var promise;
 
   describe('bare bones behavior', function() {
@@ -21,6 +21,7 @@ describe('method factory', function() {
       mock.get('/').reply(200);
       promise = endpoint.get()
         .param('someId', 123)
+        .query({'param': 'value'})
         .send();
     });
 
@@ -28,6 +29,13 @@ describe('method factory', function() {
       promise
       .invoke('status')
       .should.eventually.equal(200)
+      .notify(done);
+    });
+
+    it('attaches query parameters to the url', function(done) {
+      promise
+      .invoke('url')
+      .should.eventually.equal('/?param=value')
       .notify(done);
     });
   });

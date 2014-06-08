@@ -53,6 +53,6 @@
     "qagent": "0.0.1",
     "superagent": "0.18.x",
     "path": "~0.4.9",
-    "requestadapter": "0.0.2"
+    "requestadapter": "0.0.4"
   }
 }

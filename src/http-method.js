@@ -64,6 +64,12 @@ Method.prototype.data = function(data) {
   return this;
 };
 
+Method.prototype.query = function(query) {
+  this._query = query;
+
+  return this;
+};
+
 Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
@@ -78,6 +84,10 @@ Method.prototype.createRequestObject = function() {
 
   if(this._data) {
     requestObject.send(this._data);
+  }
+
+  if(this._query) {
+    requestObject.query(this._query);
   }
 
   _.each(headers, function(headerValue, headerName) {

@@ -31,6 +31,15 @@ describe('endpoints', function() {
         .notify(done);
     });
 
+    it('attaches query parameters to the url', function(done) {
+      fakeEndpoint.get()
+      .query({param: 'value'})
+      .send()
+      .invoke('url')
+      .should.eventually.equal('/base/test/data-1-fixture.json?param=value')
+      .notify(done);
+    });
+
     it('generates the correct objects', function() {
       fakeEndpoint.get.should.be.a.Function;
       fakeEndpoint.delete.should.be.a.Function;
