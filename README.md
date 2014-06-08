@@ -4,7 +4,9 @@ Endpoints
 [![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
 
 Simple helper library for HTTP service clients. Endpoints works in the browser
-and in Node.
+and in Node, using [RequestAdapter](https://github.com/kahnjw/RequestAdapter/) to expose a common interface for Request Response objects, and [superagent](https://github.com/visionmedia/superagent) for Node and browser AJAX.
+
+View the [Endpoints API Reference](https://github.com/kahnjw/endpoints/blob/0.3.0/api-reference.md).
 
 ## tl;dr
 
@@ -16,9 +18,8 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
   .methods(['get', 'post']);
 
 myEndpoint.get()
-  .send() // Returns an Q Promise (Promises/A+)
-  .get('xhr')
-  .get('responseText')
+  .send()          // Returns an Q Promise (Promises/A+)
+  .invoke('text')  // You may invoke any method a RequestAdapter implements
   .done(console.log);
 ```
 
@@ -42,28 +43,18 @@ var myEndpoint = new Endpoints.create('/some/url/pattern')
 var promise = myEndpoint.get()
   .send(); // Returns an Q Promise (Promises/A+)
 
-// In Node you can do something like this
+// You can do something like this
 promise
-.get('res')
-.get('responseText')
-.then(function(text) {
-  console.log(text);
-  return text;
+.then(function(requestAdapter) {
+  return requestAdapter.text();
 })
 .done(function(text) {
-  // Do stuff with the text
+  console.log(text);
 });
 
-// Or, for brevity, you can do
+// Which is equivalent to
 promise
-.get('res')
-.get('responseText')
-.done(console.log);
-
-// In the browser response objects are a little different
-promise
-.get('xhr')
-.get('text')
+.invoke('text')
 .done(console.log);
 ```
 
@@ -93,3 +84,63 @@ myOtherEndpoint.post()
   ...
   .done();
 ```
+
+## Development
+
+Bug fixes, new features, doc fixes are welcome and ecouraged. Open your pull early, make sure the code lints without error and the tests pass.
+
+### Setup
+
+```
+$ git clone git@github.com:kahnjw/endpoints.git
+$ cd endpoints
+$ npm install
+```
+
+### Lint and test
+
+```
+$ gulp lint
+$ gulp browserspec
+$ gulp nodespec
+```
+
+Or just use the watch task
+
+```
+$ gulp watch
+```
+
+If new features are added or a bug is fixed, please cover them with new tests.
+
+### Footprint
+
+Keep in mind this library is targeting both browser and Node environments.
+Footprint size should be as small as possible. To help with this there is a
+`footprint` task:
+
+```
+$ gulp footprint
+[gulp] Using gulpfile ~/Documents/endpoints/gulpfile.js
+[gulp] Starting 'footprint'...
+[gulp] gulp-size: total 57.35 kB
+index.js
+└─┬ create.js
+  ├─┬ http-method-helper.js
+  │ └─┬ http-method.js
+  │   ├── ../node_modules/lodash/dist/lodash.js
+  │   ├─┬ ../node_modules/qagent/index.js
+  │   │ └── ../node_modules/q/q.js
+  │   └─┬ ../node_modules/superagent/lib/client.js
+  │     ├── ../node_modules/superagent/node_modules/component-emitter/index.js
+  │     └── ../node_modules/superagent/node_modules/reduce-component/index.js
+  ├─┬ ../node_modules/requestadapter/src/index.js
+  │ ├── ../node_modules/requestadapter/src/xhr-adapter.js
+  │ └── ../node_modules/requestadapter/src/node-request-adapter.js
+  └── ../node_modules/lodash/dist/lodash.js
+
+[gulp] Finished 'footprint' after 1.4 s
+```
+
+This prints out the minified size of the library, and the dependency tree to
+ensure that no libraries are double included.

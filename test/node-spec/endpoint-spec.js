@@ -9,7 +9,7 @@ var chaiAsPromised = require('chai-as-promised');
 chai.should();
 chai.use(chaiAsPromised);
 
-describe('method factory', function() {
+describe('endpoints', function() {
   var promise;
 
   describe('bare bones behavior', function() {
@@ -21,14 +21,111 @@ describe('method factory', function() {
       mock.get('/').reply(200);
       promise = endpoint.get()
         .param('someId', 123)
+        .query({'param': 'value'})
         .send();
     });
 
     it('can make requests to the web root', function(done) {
       promise
-      .get('res')
-      .get('statusCode')
+      .invoke('status')
       .should.eventually.equal(200)
+      .notify(done);
+    });
+
+    it('attaches query parameters to the url', function(done) {
+      promise
+      .invoke('url')
+      .should.eventually.equal('/?param=value')
+      .notify(done);
+    });
+  });
+
+  describe('promise permutation on the endpoint object', function() {
+    beforeEach(function() {
+      var permutation = function(requestAdapter) {
+        return requestAdapter.text() + ' now you know';
+      };
+
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .thenApply(permutation)
+        .domain('http://localhost:9000');
+
+      mock.get('/').reply(200, 'If you didn\'t know');
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('permutes the promise with a specified permutation', function(done) {
+      promise
+      .should.eventually.equal('If you didn\'t know now you know')
+      .notify(done);
+    });
+  });
+
+  describe('promise permutation on the method object', function() {
+    beforeEach(function() {
+      var permutation = function(requestAdapter) {
+        return requestAdapter.text() + ' now you know';
+      };
+
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .domain('http://localhost:9000');
+
+      endpoint.get.thenApply(permutation);
+
+      mock.get('/').reply(200, 'If you didn\'t know');
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('permutes the promise with a specified method permutation', function(done) {
+      promise
+      .should.eventually.equal('If you didn\'t know now you know')
+      .notify(done);
+    });
+  });
+
+  describe('promise permutation ordering', function() {
+    beforeEach(function() {
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .thenApply(function(requestAdapter) {
+          var num = Number(requestAdapter.text());
+          return num * 2;
+        })
+        .domain('http://localhost:9000');
+
+      endpoint.get.thenApply(function(num) {
+        return num + 5;
+      });
+
+      mock.get('/').reply(200, '3');
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('orders permutation from least specific to most', function(done) {
+      promise
+      .should.eventually.equal(11)
+      .notify(done);
+    });
+  });
+
+  describe('rejects the promise on errors', function() {
+    beforeEach(function() {
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .domain('/');
+
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('permutes the promise with a specified permutation', function(done) {
+      promise
+      .should.eventually.be.rejectedWith('connect ECONNREFUSED')
       .notify(done);
     });
   });
@@ -51,8 +148,7 @@ describe('method factory', function() {
 
     it('can insert parameters to the url', function(done) {
       promise
-      .get('res')
-      .get('statusCode')
+      .invoke('status')
       .should.eventually.equal(200)
       .notify(done);
     });

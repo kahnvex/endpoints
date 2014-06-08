@@ -7,8 +7,24 @@ var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglify');
 var size = require('gulp-size');
 var shell = require('gulp-shell');
-var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
+
+function lint() {
+  var files = ['src/**/*.js', 'test/**/*.js', 'gulpfile.js', 'karma.conf.js'];
+  return gulp.src(files)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+}
+
+function browserspec() {
+  return gulp.src('')
+    .pipe(shell(['karma start']));
+}
+
+function nodespec() {
+  return gulp.src('')
+    .pipe(shell(['mocha test/node-spec -R spec']));
+}
 
 gulp.task('footprint', function() {
    return browserify('./src/index', {list: true})
@@ -22,22 +38,20 @@ gulp.task('footprint', function() {
 });
 
 gulp.task('browserspec', function() {
-  gulp.src('')
-    .pipe(shell(['karma start']));
+  return browserspec();
 });
 
-
 gulp.task('nodespec', function() {
-  return gulp.src('test/node-spec/*-spec.js')
-    .pipe(mocha({reporter: 'spec'}))
-    .once('end', function () {
-      process.exit();
-    });
+  return nodespec();
 });
 
 gulp.task('lint', function() {
-  var files = ['src/**/*.js', 'test/**/*.js', 'gulpfile.js', 'karma.conf.js'];
-  return gulp.src(files)
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
+  return lint();
+});
+
+gulp.task('watch', function() {
+  var files = ['src/**/*.js', 'test/**/*.js'];
+  var tasks = ['lint', 'browserspec', 'nodespec'];
+
+  gulp.watch(files, tasks);
 });

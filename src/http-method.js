@@ -5,11 +5,13 @@ var agentQ = require('qagent');
 var request = require('superagent');
 
 
-function Method(method, endpoint) {
-  this.method = method;
-  this.endpoint = endpoint;
-  this.headers = {};
+function Method(method, endpointConfig) {
   this.params = {};
+  this.method = method;
+  this.headers = endpointConfig.headers || {};
+  this.thenApplies = endpointConfig.thenApplies || [];
+  this.domain = endpointConfig.domain || '';
+  this.pattern = endpointConfig.pattern || '/';
 
   return this;
 }
@@ -27,8 +29,8 @@ Method.prototype.param = function(key, value) {
 };
 
 Method.prototype.buildUrl = function() {
-  var domain = this.endpoint.getDomain();
-  var pattern = this.endpoint.getPattern();
+  var domain = this.domain;
+  var pattern = this.pattern;
   var urlArray = [domain];
   var urlString;
 
@@ -53,12 +55,26 @@ Method.prototype.buildUrl = function() {
   return urlString;
 };
 
-Method.prototype.merge = function(defaults, overrides) {
-  return _.extend({}, defaults, overrides);
-};
-
 Method.prototype.data = function(data) {
   this._data = data;
+
+  return this;
+};
+
+Method.prototype.query = function(query) {
+  this._query = query;
+
+  return this;
+};
+
+Method.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
+  var thenApply = {
+    onFulfilled: onFulfilled,
+    onRejected: onRejected,
+    onProgress: onProgress
+  };
+
+  this.thenApplies.push(thenApply);
 
   return this;
 };
@@ -66,19 +82,32 @@ Method.prototype.data = function(data) {
 Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
-  return agentQ.end(requestObject);
+  var promise = agentQ.end(requestObject);
+
+  _.each(this.thenApplies, function(thenApply) {
+    promise = promise.then(
+      thenApply.onFulfilled,
+      thenApply.onRejected,
+      thenApply.onProgress
+    );
+  });
+
+  return promise;
 };
 
 Method.prototype.createRequestObject = function() {
   var url = this.buildUrl();
   var requestObject = request[this.method](url);
-  var headers = this.merge(this.endpoint.headers, this.headers);
 
   if(this._data) {
     requestObject.send(this._data);
   }
 
-  _.each(headers, function(headerValue, headerName) {
+  if(this._query) {
+    requestObject.query(this._query);
+  }
+
+  _.each(this.headers, function(headerValue, headerName) {
     requestObject.set(headerName, headerValue);
   }, this);
 

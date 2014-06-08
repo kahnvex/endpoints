@@ -41,7 +41,6 @@
     "gulp-streamify": "0.0.5",
     "browserify-graph": "0.0.0",
     "gulp-shell": "0.2.x",
-    "gulp-mocha": "0.4.x",
     "shmock": "0.7.x",
     "chai": "~1.9.1",
     "gulp-jshint": "1.6.x",
@@ -52,6 +51,7 @@
     "q": "1.x.x",
     "qagent": "0.0.1",
     "superagent": "0.18.x",
-    "path": "~0.4.9"
+    "path": "~0.4.9",
+    "requestadapter": "0.0.4"
   }
 }

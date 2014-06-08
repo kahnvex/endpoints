@@ -11,17 +11,13 @@ chai.use(chaiAsPromised);
 
 describe('method factory', function() {
   var method;
-  var endpoint = {
-    getDomain: function() {
-      return 'http://localhost:9000';
-    },
-    getPattern: function() {
-      return '';
-    }
+  var endpointConfig = {
+    domain: 'http://localhost:9000',
+    pattern: ''
   };
 
   beforeEach(function() {
-    method = new Method('get', endpoint);
+    method = new Method('get', endpointConfig);
   });
 
   it('returns itself after calls to param', function() {
@@ -40,7 +36,9 @@ describe('method factory', function() {
     beforeEach(function() {
       mock.get('/').reply(200, {});
 
-      promise = method.send();
+      promise = method
+        .query({param: 'value'})
+        .send();
     });
 
     it('returns a response after request is completed', function(done) {
