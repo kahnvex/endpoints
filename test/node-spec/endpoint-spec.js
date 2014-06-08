@@ -106,7 +106,7 @@ describe('endpoints', function() {
         .send();
     });
 
-    it('orders permutations correctly', function(done) {
+    it('orders permutation from least specific to most', function(done) {
       promise
       .should.eventually.equal(11)
       .notify(done);
