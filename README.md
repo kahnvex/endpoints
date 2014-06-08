@@ -6,6 +6,8 @@ Endpoints
 Simple helper library for HTTP service clients. Endpoints works in the browser
 and in Node.
 
+View the [Endpoints API Reference](https://github.com/kahnjw/endpoints/wiki/Endpoints-API-Reference/_edit).
+
 ## tl;dr
 
 ```javascript
