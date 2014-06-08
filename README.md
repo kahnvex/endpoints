@@ -105,6 +105,12 @@ $ gulp browserspec
 $ gulp nodespec
 ```
 
+Or just use the watch task
+
+```
+$ gulp watch
+```
+
 If new features are added or a bug is fixed, please cover them with new tests.
 
 ### Footprint

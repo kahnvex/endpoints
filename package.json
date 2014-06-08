@@ -41,7 +41,6 @@
     "gulp-streamify": "0.0.5",
     "browserify-graph": "0.0.0",
     "gulp-shell": "0.2.x",
-    "gulp-mocha": "0.4.x",
     "shmock": "0.7.x",
     "chai": "~1.9.1",
     "gulp-jshint": "1.6.x",
