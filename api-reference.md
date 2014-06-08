@@ -16,6 +16,14 @@ Set the pattern that the endpoint should use when making requests. Returns the `
 endpoint.pattern('/users/[user_id]');
 ```
 
+## endpoint.domain(domain)
+
+Set the domain of the endpoint.
+
+```javascript
+endpoint.domain('http://google.com');
+```
+
 ## endpoint.methods(method | [methods])
 
 Sets the HTTP methods (`GET`, `PUT`, `POST`, `DELETE` etc) that the `endpoint` can call. Returns the `endpoint`.
@@ -97,4 +105,3 @@ getMethod
 ## method.send()
 
 Makes the request and returns a promise.
-
