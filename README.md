@@ -100,9 +100,9 @@ $ npm install
 ### Lint and test
 
 ```
-$ ne gulp lint
-$ ne gulp browserspec
-$ ne gulp nodespec
+$ gulp lint
+$ gulp browserspec
+$ gulp nodespec
 ```
 
 If new features are added or a bug is fixed, please cover them with new tests.
