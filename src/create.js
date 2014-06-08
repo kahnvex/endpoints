@@ -6,12 +6,16 @@ var _ = require('lodash');
 
 
 function Create(pattern) {
+  var passThroughError = function(error) {
+    throw error;
+  };
+
   var passThrough = function(value) {
     return value;
   };
 
   this.thenApplies = [];
-  this.thenApply(requestAdapter, passThrough, passThrough);
+  this.thenApply(requestAdapter, passThroughError, passThrough);
   pattern = pattern || '';
   pattern  = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');

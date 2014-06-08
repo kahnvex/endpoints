@@ -40,7 +40,7 @@ describe('endpoints', function() {
     });
   });
 
-  describe('promise permutation', function() {
+  describe('promise permutation onFullfilled', function() {
     beforeEach(function() {
       var permutation = function(requestAdapter) {
         return requestAdapter.text() + ' now you know';
@@ -59,6 +59,23 @@ describe('endpoints', function() {
     it('permutes the promise with a specified permutation', function(done) {
       promise
       .should.eventually.equal('If you didn\'t know now you know')
+      .notify(done);
+    });
+  });
+
+  describe('rejects the promise on errors', function() {
+    beforeEach(function() {
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .domain('/');
+
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('permutes the promise with a specified permutation', function(done) {
+      promise
+      .should.eventually.be.rejectedWith('connect ECONNREFUSED')
       .notify(done);
     });
   });
