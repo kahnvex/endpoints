@@ -84,3 +84,55 @@ myOtherEndpoint.post()
   ...
   .done();
 ```
+
+## Development
+
+Bug fixes, new features, doc fixes are welcome and ecouraged. Open your pull early, make sure the code lints without error and the tests pass.
+
+### Setup
+
+```
+$ git clone git@github.com:kahnjw/endpoints.git
+$ cd endpoints
+$ npm install
+```
+
+### Lint and test
+
+```
+$ ne gulp lint
+$ ne gulp browserspec
+$ ne gulp nodespec
+```
+
+If new features are added or a bug is fixed, please cover them with new tests.
+
+Also keep in mind this library is targeting both browser and Node environments
+so keeping the footprint down is good. To help with this there is a `footprint`
+task:
+
+```
+$ gulp footprint
+[gulp] Using gulpfile ~/Documents/endpoints/gulpfile.js
+[gulp] Starting 'footprint'...
+[gulp] gulp-size: total 57.35 kB
+index.js
+└─┬ create.js
+  ├─┬ http-method-helper.js
+  │ └─┬ http-method.js
+  │   ├── ../node_modules/lodash/dist/lodash.js
+  │   ├─┬ ../node_modules/qagent/index.js
+  │   │ └── ../node_modules/q/q.js
+  │   └─┬ ../node_modules/superagent/lib/client.js
+  │     ├── ../node_modules/superagent/node_modules/component-emitter/index.js
+  │     └── ../node_modules/superagent/node_modules/reduce-component/index.js
+  ├─┬ ../node_modules/requestadapter/src/index.js
+  │ ├── ../node_modules/requestadapter/src/xhr-adapter.js
+  │ └── ../node_modules/requestadapter/src/node-request-adapter.js
+  └── ../node_modules/lodash/dist/lodash.js
+
+[gulp] Finished 'footprint' after 1.4 s
+```
+
+This prints out the minified size of the library, and the dependency tree to
+ensure that no libraries are double included.
