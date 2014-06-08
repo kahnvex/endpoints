@@ -6,7 +6,7 @@ Endpoints
 Simple helper library for HTTP service clients. Endpoints works in the browser
 and in Node, using [RequestAdapter](https://github.com/kahnjw/RequestAdapter/) to expose a common interface for Request Response objects.
 
-View the [Endpoints API Reference](https://github.com/kahnjw/endpoints/blob/master/api-reference.md).
+View the [Endpoints API Reference](https://github.com/kahnjw/endpoints/blob/0.3.0/api-reference.md).
 
 ## tl;dr
 
