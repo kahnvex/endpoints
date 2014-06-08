@@ -42,7 +42,7 @@ endpoint.set('Content-Type', 'application/json');
 
 ## endpoint.thenApply(onFullfilled, onError, onProgress)
 
-Add a function to permute all request promises. This will be applied to every request promise ahead of time by calling promise.then(onFullfilled, onError, onProgress)
+Add a function to permute all request promises. This will be applied to every request promise ahead of time by calling `promise.then(onFullfilled, onError, onProgress)`.
 
 ```javascript
 endpoint.thenApply(onFullfilled, onError, onProgres);
@@ -111,7 +111,7 @@ getMethod
 
 ## method.thenApply(onFullfilled, onError, onProgress)
 
-Add a function to permute the request promise.
+Add a function to permute the request promise. This will apply `promise.then(onFullfilled, onError, onProgress)` to the request promise before it is returned to you.
 
 ```javascript
 method.thenApply(onFullfilled, onError, onProgres);
