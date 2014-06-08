@@ -110,7 +110,7 @@ If new features are added or a bug is fixed, please cover them with new tests.
 ### Footprint
 
 Keep in mind this library is targeting both browser and Node environments.
-Footprint size should be as small as possible To help with this there is a
+Footprint size should be as small as possible. To help with this there is a
 `footprint` task:
 
 ```
