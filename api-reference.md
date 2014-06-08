@@ -18,7 +18,7 @@ endpoint.pattern('/users/[user_id]');
 
 ## endpoint.domain(domain)
 
-Set the domain of the endpoint.
+Set the domain of the endpoint. Return the `endpoint`.
 
 ```javascript
 endpoint.domain('http://google.com');
