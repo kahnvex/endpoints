@@ -131,10 +131,14 @@ method.data({
 Set a URL token.
 
 ```javascript
-var getMethod = Endpoint.create('/users/[user_id]').get();
-getMethod
+var endpoint = Endpoint.create('/users/[user_id]').methods('get')
+
+endpoint
+.get()
 .param('user_id', 1234)
-.send(); // Sends a GET to /users/1234
+.send() // Sends a GET to /users/1234
+...
+.done();
 ```
 
 ## method.thenApply(onFullfilled, onError, onProgress)
