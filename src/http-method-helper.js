@@ -6,12 +6,18 @@ var Method = require('./http-method');
 var methodHelper = function(methodString) {
   var httpMethod = function() {
     var endpoint = this;
+
+    // Concatenate the Endpoint's thenApplies with the methods thenApplies,
+    // such that the order goes from the Endpoint's thenApplies to the
+    // method's thenApplies. Ordering from most general to most specific.
+    var thenApplies = endpoint.thenApplies.concat(
+      endpoint[methodString].thenApplies);
+
     var endpointConfig = {
       headers: endpoint.headers,
-      thenApplies: endpoint.thenApplies,
+      thenApplies: thenApplies,
       domain: endpoint.getDomain(),
       pattern: endpoint.getPattern(),
-
     };
     return new Method(methodString, endpointConfig);
   };
