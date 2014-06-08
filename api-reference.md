@@ -26,7 +26,7 @@ endpoint.domain('http://google.com');
 
 ## endpoint.methods(method | [methods])
 
-Sets the HTTP methods (`GET`, `PUT`, `POST`, `DELETE` etc) that the `endpoint` can call. Returns the `endpoint`.
+Sets the HTTP methods (`GET`, `PUT`, `POST`, `DELETE` etc) that the `endpoint` can call. Takes an array of method strings, or a single method as a string. Returns the `endpoint`.
 
 ```javascript
 endpoint.methods(['get', 'post']);
