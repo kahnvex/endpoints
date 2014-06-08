@@ -10,7 +10,6 @@ var floatingThenApply = function(onFulfilled, onRejected, onProgress) {
     onRejected: onRejected,
     onProgress: onProgress
   };
-
   this.thenApplies.push(applies);
 
   return this;

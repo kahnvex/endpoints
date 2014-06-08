@@ -80,9 +80,35 @@ describe('endpoints', function() {
         .send();
     });
 
-    it('permutes the promise with a specified permutation', function(done) {
+    it('permutes the promise with a specified method permutation', function(done) {
       promise
       .should.eventually.equal('If you didn\'t know now you know')
+      .notify(done);
+    });
+  });
+
+  describe('promise permutation ordering', function() {
+    beforeEach(function() {
+      var endpoint = Endpoints.create()
+        .methods('get')
+        .thenApply(function(requestAdapter) {
+          var num = Number(requestAdapter.text());
+          return num * 2;
+        })
+        .domain('http://localhost:9000');
+
+      endpoint.get.thenApply(function(num) {
+        return num + 5;
+      });
+
+      mock.get('/').reply(200, '3');
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('orders permutations correctly', function(done) {
+      promise
+      .should.eventually.equal(11)
       .notify(done);
     });
   });
