@@ -119,4 +119,4 @@ method.thenApply(onFullfilled, onError, onProgres);
 
 ## method.send()
 
-Makes the request and returns a promise.
+Makes the request and returns a [Q Promise](https://github.com/kriskowal/q).
