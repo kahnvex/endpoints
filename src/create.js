@@ -1,10 +1,21 @@
 'use strict';
 
 var httpMethodHelper = require('./http-method-helper');
+var requestAdapter = require('requestadapter');
 var _ = require('lodash');
 
 
 function Create(pattern) {
+  var passThroughError = function(error) {
+    throw error;
+  };
+
+  var passThrough = function(value) {
+    return value;
+  };
+
+  this.thenApplies = [];
+  this.thenApply(requestAdapter, passThroughError, passThrough);
   pattern = pattern || '';
   pattern  = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
@@ -20,6 +31,18 @@ Create.prototype.pattern = function(pattern) {
 
 Create.prototype.domain = function(domain) {
   this.setDomain(domain);
+
+  return this;
+};
+
+Create.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
+  var thenApply = {
+    onFulfilled: onFulfilled,
+    onRejected: onRejected,
+    onProgress: onProgress
+  };
+
+  this.thenApplies.push(thenApply);
 
   return this;
 };

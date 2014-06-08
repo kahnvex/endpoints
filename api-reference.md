@@ -26,7 +26,7 @@ endpoint.domain('http://google.com');
 
 ## endpoint.methods(method | [methods])
 
-Sets the HTTP methods (`GET`, `PUT`, `POST`, `DELETE` etc) that the `endpoint` can call. Returns the `endpoint`.
+Sets the HTTP methods (`GET`, `PUT`, `POST`, `DELETE` etc) that the `endpoint` can call. Takes an array of method strings, or a single method as a string. Returns the `endpoint`.
 
 ```javascript
 endpoint.methods(['get', 'post']);
@@ -38,6 +38,35 @@ Set an HTTP request header. Returns the `endpoint`.
 
 ```javascript
 endpoint.set('Content-Type', 'application/json');
+```
+
+## endpoint.thenApply(onFullfilled, onError, onProgress)
+
+Add a function to permute all request promises. This will be applied to every request promise ahead of time by calling `promise.then(onFullfilled, onError, onProgress)`. Read up on [Promises/A+](http://promises-aplus.github.io/promises-spec/), [Q's Promise implementation](https://github.com/kriskowal/q), and [Q's API Reference](https://github.com/kriskowal/q/wiki/API-Reference).
+
+```javascript
+endpoint.thenApply(onFullfilled, onError, onProgres);
+```
+
+This is useful if you know that you always want to permute a request promise in a
+certain way. If you are only interested in the body of the response, you might
+use `thenApply` to permute the promise to only give you the body, like this:
+
+```javascript
+var getBody = function(requestAdapter) {
+  return requestAdapter.responseObject();
+};
+var passError = function(error) {
+  throw error;
+};
+endpoint.thenApply(getBody, passError);
+
+// Now the endpoint can be used in a way that assumes the response object
+// is always passed to the onFullfilled function.
+endpoint
+.get()
+.send()
+.done(console.log);
 ```
 
 ## endpoint.get()
@@ -101,7 +130,14 @@ getMethod
 .send(); // Sends a GET to /users/1234
 ```
 
+## method.thenApply(onFullfilled, onError, onProgress)
+
+Add a function to permute the request promise. This will apply `promise.then(onFullfilled, onError, onProgress)` to the request promise before it is returned to you. Read up on [Promises/A+](http://promises-aplus.github.io/promises-spec/), [Q's Promise implementation](https://github.com/kriskowal/q), and [Q's API Reference](https://github.com/kriskowal/q/wiki/API-Reference).
+
+```javascript
+method.thenApply(onFullfilled, onError, onProgres);
+```
 
 ## method.send()
 
-Makes the request and returns a promise.
+Makes the request and returns a [Q Promise](https://github.com/kriskowal/q).
