@@ -75,7 +75,7 @@ Takes an object of query parameters. Keys are query parameter names, values are 
 ```javascript
 method.query({
   param1: 'val1',
-  param2: 'val2
+  param2: 'val2'
 });
 ```
 
