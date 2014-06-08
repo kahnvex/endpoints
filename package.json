@@ -1,6 +1,6 @@
 {
   "name": "endpointsjs",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Simple helper functions for service client implementation",
   "main": "src/index.js",
   "scripts": {
