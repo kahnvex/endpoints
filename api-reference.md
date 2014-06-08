@@ -131,7 +131,7 @@ method.data({
 Set a URL token.
 
 ```javascript
-var endpoint = Endpoint.create('/users/[user_id]').methods('get')
+var endpoint = Endpoint.create('/users/[user_id]').methods('get');
 
 endpoint
 .get()
