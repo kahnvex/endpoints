@@ -71,6 +71,14 @@ Create.prototype.header = function(headerKey, headerValue) {
   return this;
 };
 
+Create.prototype.contentType = function(mimeType) {
+  return this.header('Content-Type', mimeType);
+};
+
+Create.prototype.accepts = function(mimeType) {
+  return this.header('Accepts', mimeType);
+};
+
 Create.prototype.getDomain = function() {
   return this._domain;
 };
