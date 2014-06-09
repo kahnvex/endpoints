@@ -7,7 +7,7 @@ var _ = require('lodash');
 var Q = require('q');
 Q.longStackSupport = true;
 
-function Create(pattern) {
+function Endpoint(pattern) {
   var passThroughError = function(error) {
     throw error;
   };
@@ -24,20 +24,20 @@ function Create(pattern) {
   this._domain = '';
 }
 
-Create.prototype.headers = {};
+Endpoint.prototype.headers = {};
 
-Create.prototype.pattern = function(pattern) {
+Endpoint.prototype.pattern = function(pattern) {
   pattern = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
 };
 
-Create.prototype.domain = function(domain) {
+Endpoint.prototype.domain = function(domain) {
   this.setDomain(domain);
 
   return this;
 };
 
-Create.prototype.methods = function(methodList){
+Endpoint.prototype.methods = function(methodList){
   if(_.isString(methodList)) {
     methodList = [methodList];
   }
@@ -51,11 +51,11 @@ Create.prototype.methods = function(methodList){
   return this;
 };
 
-Create.prototype.getDomain = function() {
+Endpoint.prototype.getDomain = function() {
   return this._domain;
 };
 
-Create.prototype.setDomain = function(domain) {
+Endpoint.prototype.setDomain = function(domain) {
   this._domain = domain;
 
   if(this._domain.substr(-1) === '/') {
@@ -63,11 +63,11 @@ Create.prototype.setDomain = function(domain) {
   }
 };
 
-Create.prototype.getPattern = function() {
+Endpoint.prototype.getPattern = function() {
   return this._pattern;
 };
 
-Create.prototype.removeLeadingSlash = function(string) {
+Endpoint.prototype.removeLeadingSlash = function(string) {
   if(string[0] === '/') {
     return string.substr(1);
   }
@@ -75,6 +75,6 @@ Create.prototype.removeLeadingSlash = function(string) {
   return string;
 };
 
-_.extend(Create.prototype, httpConfigurable());
+_.extend(Endpoint.prototype, httpConfigurable());
 
-module.exports = Create;
+module.exports = Endpoint;
