@@ -5,6 +5,8 @@ var newHttpConfigurable = function() {
 
   httpConfigurable.thenApplies = [];
 
+  httpConfigurable.headers = {};
+
   httpConfigurable.header = function(headerKey, headerValue) {
     this.headers[headerKey] = headerValue;
 

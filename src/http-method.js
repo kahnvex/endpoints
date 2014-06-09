@@ -3,9 +3,12 @@
 var _ = require('lodash');
 var agentQ = require('qagent');
 var request = require('superagent');
+var httpConfigurable = require('./http-configurable');
 
 
 function Method(method, endpointConfig) {
+  _.extend(this, httpConfigurable());
+
   this.params = {};
   this.method = method;
   this.headers = endpointConfig.headers || {};
@@ -13,22 +16,10 @@ function Method(method, endpointConfig) {
   this.domain = endpointConfig.domain || '';
   this.pattern = endpointConfig.pattern || '/';
 
+  
+
   return this;
 }
-
-Method.prototype.header = function(headerKey, headerValue) {
-  this.headers[headerKey] = headerValue;
-
-  return this;
-};
-
-Method.prototype.contentType = function(mimeType) {
-  return this.header('Content-Type', mimeType);
-};
-
-Method.prototype.accepts = function(mimeType) {
-  return this.header('Accepts', mimeType);
-};
 
 Method.prototype.param = function(key, value) {
   this.params[key] = value;

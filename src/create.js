@@ -16,7 +16,8 @@ function Endpoint(pattern) {
     return value;
   };
 
-  this.thenApplies = [];
+  _.extend(this, httpConfigurable());
+
   this.thenApply(requestAdapter, passThroughError, passThrough);
   pattern = pattern || '';
   pattern  = this.removeLeadingSlash(pattern);
@@ -24,11 +25,11 @@ function Endpoint(pattern) {
   this._domain = '';
 }
 
-Endpoint.prototype.headers = {};
-
 Endpoint.prototype.pattern = function(pattern) {
   pattern = this.removeLeadingSlash(pattern);
   this._pattern = pattern.split('/');
+
+  return this;
 };
 
 Endpoint.prototype.domain = function(domain) {
@@ -74,7 +75,5 @@ Endpoint.prototype.removeLeadingSlash = function(string) {
 
   return string;
 };
-
-_.extend(Endpoint.prototype, httpConfigurable());
 
 module.exports = Endpoint;
