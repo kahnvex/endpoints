@@ -12,6 +12,40 @@ chai.use(chaiAsPromised);
 describe('endpoints', function() {
   var promise;
 
+  describe('interface layout', function() {
+    var endpoint = Endpoints.create();
+
+    it('endpoint.header returns the endpoint', function() {
+      endpoint.header('key', 'val')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.domain returns the endpoint', function() {
+      endpoint.domain('domain')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.contentType returns the endpoint', function() {
+      endpoint.contentType('json')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.accepts returns the endpoint', function() {
+      endpoint.accepts('xml')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.pattern returns the endpoint', function() {
+      endpoint.pattern('/url')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.methods returns the endpoint', function() {
+      endpoint.methods('get')
+      .should.equal(endpoint);
+    });
+  });
+
   describe('bare bones behavior', function() {
     beforeEach(function() {
       var endpoint = Endpoints.create()
