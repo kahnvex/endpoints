@@ -2,18 +2,10 @@
 
 var httpMethodHelper = require('./http-method-helper');
 var requestAdapter = require('requestadapter');
+var httpConfigurable = require('./http-configurable');
 var _ = require('lodash');
-
-var floatingThenApply = function(onFulfilled, onRejected, onProgress) {
-  var applies = {
-    onFulfilled: onFulfilled,
-    onRejected: onRejected,
-    onProgress: onProgress
-  };
-  this.thenApplies.push(applies);
-
-  return this;
-};
+var Q = require('q');
+Q.longStackSupport = true;
 
 function Create(pattern) {
   var passThroughError = function(error) {
@@ -45,38 +37,18 @@ Create.prototype.domain = function(domain) {
   return this;
 };
 
-Create.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
-  var createThenApply = _.bind(floatingThenApply, this);
-  return createThenApply(onFulfilled, onRejected, onProgress);
-};
-
 Create.prototype.methods = function(methodList){
   if(_.isString(methodList)) {
     methodList = [methodList];
   }
 
   _.each(methodList, function(method){
-    this[method] = _.bind(httpMethodHelper, this)(method);
+    this[method] = httpMethodHelper(method, this);
 
-    this[method].thenApplies = [];
-    this[method].thenApply = _.bind(floatingThenApply, this[method]);
+    _.extend(this[method], httpConfigurable());
   }, this);
 
   return this;
-};
-
-Create.prototype.header = function(headerKey, headerValue) {
-  this.headers[headerKey] = headerValue;
-
-  return this;
-};
-
-Create.prototype.contentType = function(mimeType) {
-  return this.header('Content-Type', mimeType);
-};
-
-Create.prototype.accepts = function(mimeType) {
-  return this.header('Accepts', mimeType);
 };
 
 Create.prototype.getDomain = function() {
@@ -102,5 +74,7 @@ Create.prototype.removeLeadingSlash = function(string) {
 
   return string;
 };
+
+_.extend(Create.prototype, httpConfigurable());
 
 module.exports = Create;

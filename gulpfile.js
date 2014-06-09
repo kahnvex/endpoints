@@ -23,7 +23,7 @@ function browserspec() {
 
 function nodespec() {
   return gulp.src('')
-    .pipe(shell(['mocha test/node-spec -R spec']));
+    .pipe(shell(['mocha test/node-spec -R spec -G']));
 }
 
 gulp.task('footprint', function() {
