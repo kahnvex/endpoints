@@ -1,5 +1,12 @@
 # [Changelog](https://github.com/kahnjw/endpoints/releases)
 
+## 0.3.1
+
+* Add sugar method Endpoint.contentType
+* Add sugar method Endpoint.accepts
+* Add sugar method Method.contentType
+* Add sugar method Method.accepts
+
 ## 0.3.0
 
 * Add support for query parameter configuration
