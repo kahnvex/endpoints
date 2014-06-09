@@ -22,6 +22,14 @@ Method.prototype.header = function(headerKey, headerValue) {
   return this;
 };
 
+Method.prototype.contentType = function(mimeType) {
+  return this.header('Content-Type', mimeType);
+};
+
+Method.prototype.accepts = function(mimeType) {
+  return this.header('Accepts', mimeType);
+};
+
 Method.prototype.param = function(key, value) {
   this.params[key] = value;
 

@@ -32,13 +32,21 @@ Sets the HTTP methods (`GET`, `PUT`, `POST`, `DELETE` etc) that the `endpoint` c
 endpoint.methods(['get', 'post']);
 ```
 
-## endpoint.set(headerName, headerValue)
+## endpoint.header(headerName, headerValue)
 
 Set an HTTP request header. Returns the `endpoint`.
 
 ```javascript
-endpoint.set('Content-Type', 'application/json');
+endpoint.header('Content-Type', 'application/json');
 ```
+
+## endpoint.contentType(mimeType)
+
+Sugar method for `endpoint.header('Content-Type', mimeType)`
+
+## endpoint.accepts(mimeType)
+
+Sugar method for `endpoint.header('Accepts', mimeType)`
 
 ## endpoint.thenApply(onFullfilled, onError, onProgress)
 
@@ -151,6 +159,22 @@ endpoint
 ...
 .done();
 ```
+
+## method.header(headerName, headerValue)
+
+Set an HTTP request header. Returns the `method`.
+
+```javascript
+method.header('Content-Type', 'application/json');
+```
+
+## method.contentType(mimeType)
+
+Sugar method for `method.header('Content-Type', mimeType)`.
+
+## method.accepts(mimeType)
+
+Sugar method for `method.header('Accepts', mimeType)`
 
 ## method.thenApply(onFullfilled, onError, onProgress)
 
