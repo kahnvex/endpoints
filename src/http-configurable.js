@@ -7,7 +7,7 @@ var httpConfigurable = {};
 
 httpConfigurable.initHttpConfigurable = function() {
   this.thenApplies = [];
-  this.headers = [];
+  this.headers = {};
 };
 
 httpConfigurable.header = function(headerKey, headerValue) {
@@ -20,8 +20,8 @@ httpConfigurable.contentType = function(mimeType) {
   return this.header('Content-Type', mimeType);
 };
 
-httpConfigurable.accepts = function(mimeType) {
-  return this.header('Accepts', mimeType);
+httpConfigurable.accept = function(mimeType) {
+  return this.header('Accept', mimeType);
 };
 
 httpConfigurable.thenApply = function(onFulfilled, onRejected, onProgress) {

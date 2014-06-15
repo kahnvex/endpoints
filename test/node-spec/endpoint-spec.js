@@ -30,8 +30,8 @@ describe('endpoints', function() {
       .should.equal(endpoint);
     });
 
-    it('endpoint.accepts returns the endpoint', function() {
-      endpoint.accepts('xml')
+    it('endpoint.accept returns the endpoint', function() {
+      endpoint.accept('xml')
       .should.equal(endpoint);
     });
 
@@ -186,5 +186,99 @@ describe('endpoints', function() {
       .should.eventually.equal(200)
       .notify(done);
     });
+  });
+
+  describe('setting endpoint headers', function() {
+    var promise;
+
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint')
+        .methods('get')
+        .accept('application/xml')
+        .contentType('application/json')
+        .header('from', 'fake@email.com')
+        .domain('http://localhost:9000');
+
+      mock.get('/endpoint').reply(200);
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('sets the accept header from the endpoint', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('accept')
+      .should.eventually.equal('application/xml')
+      .notify(done);
+    });
+
+    it('sets the Content Type header from the endpoint', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('content-type')
+      .should.eventually.equal('application/json')
+      .notify(done);
+    });
+
+    it('sets other request header fields from the endpoint', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('from')
+      .should.eventually.equal('fake@email.com')
+      .notify(done);
+    })
+  });
+
+  describe('setting per method headers', function() {
+    var promise;
+
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint')
+        .methods('get')
+        .domain('http://localhost:9000');
+
+      mock.get('/endpoint').reply(200);
+      promise = endpoint.get()
+        .accept('application/xml')
+        .contentType('application/json')
+        .header('from', 'fake@email.com')
+        .send();
+    });
+
+    it('sets the accept header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('accept')
+      .should.eventually.equal('application/xml')
+      .notify(done);
+    });
+
+    it('sets the Content Type header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('content-type')
+      .should.eventually.equal('application/json')
+      .notify(done);
+    });
+
+    it('sets other request header fields from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('from')
+      .should.eventually.equal('fake@email.com')
+      .notify(done);
+    })
   });
 });

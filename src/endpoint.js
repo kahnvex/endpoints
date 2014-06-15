@@ -16,6 +16,7 @@ function Endpoint(pattern) {
     return value;
   };
 
+  // An endpoint is httpConfigurable so initialize it as such
   this.initHttpConfigurable();
   this.thenApply(requestAdapter, passThroughError, passThrough);
   pattern = pattern || '';
@@ -38,17 +39,24 @@ Endpoint.prototype.domain = function(domain) {
 };
 
 Endpoint.prototype.methods = function(methodList){
+  var method;
+
+  var createMethod = function(methodString){
+    // Attach the method to the endpoint
+    this[methodString] = httpMethodHelper(methodString, this);
+    method = this[methodString];
+
+    // Methods are HTTP configurable so extend the method with
+    // the httpConfigurable mixin and initialize it.
+    _.extend(method, httpConfigurable);
+    method.initHttpConfigurable();
+  };
+
   if(_.isString(methodList)) {
     methodList = [methodList];
   }
 
-  _.each(methodList, function(method){
-
-    this[method] = httpMethodHelper(method, this);
-    _.extend(this[method], httpConfigurable);
-    this[method].initHttpConfigurable();
-
-  }, this);
+  _.each(methodList, createMethod, this);
 
   return this;
 };
@@ -77,6 +85,8 @@ Endpoint.prototype.removeLeadingSlash = function(string) {
   return string;
 };
 
+// Endpoints are HTTP configurable so extend Endpoint.prototype with
+// the httpConfigurable mixin
 _.extend(Endpoint.prototype, httpConfigurable);
 
 module.exports = Endpoint;
