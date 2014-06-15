@@ -7,16 +7,15 @@ var httpConfigurable = require('./http-configurable');
 
 
 function Method(method, endpointConfig) {
-  _.extend(this, httpConfigurable());
+  var thenApplies = endpointConfig.thenApplies || [];
 
+  this.initHttpConfigurable();
+  this.mergeThenApplies(thenApplies);
   this.params = {};
   this.method = method;
   this.headers = endpointConfig.headers || {};
-  this.thenApplies = endpointConfig.thenApplies || [];
   this.domain = endpointConfig.domain || '';
   this.pattern = endpointConfig.pattern || '/';
-
-  
 
   return this;
 }
@@ -66,18 +65,6 @@ Method.prototype.query = function(query) {
   return this;
 };
 
-Method.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
-  var thenApply = {
-    onFulfilled: onFulfilled,
-    onRejected: onRejected,
-    onProgress: onProgress
-  };
-
-  this.thenApplies.push(thenApply);
-
-  return this;
-};
-
 Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
@@ -112,5 +99,8 @@ Method.prototype.createRequestObject = function() {
 
   return requestObject;
 };
+
+_.extend(Method.prototype, httpConfigurable);
+
 
 module.exports = Method;

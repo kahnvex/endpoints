@@ -1,39 +1,43 @@
 'use strict';
 
-var newHttpConfigurable = function() {
-  var httpConfigurable = {};
+var _ = require('lodash');
 
-  httpConfigurable.thenApplies = [];
 
-  httpConfigurable.headers = {};
+var httpConfigurable = {};
 
-  httpConfigurable.header = function(headerKey, headerValue) {
-    this.headers[headerKey] = headerValue;
+httpConfigurable.initHttpConfigurable = function() {
+  this.thenApplies = [];
+  this.headers = [];
+};
 
-    return this;
+httpConfigurable.header = function(headerKey, headerValue) {
+  this.headers[headerKey] = headerValue;
+
+  return this;
+};
+
+httpConfigurable.contentType = function(mimeType) {
+  return this.header('Content-Type', mimeType);
+};
+
+httpConfigurable.accepts = function(mimeType) {
+  return this.header('Accepts', mimeType);
+};
+
+httpConfigurable.thenApply = function(onFulfilled, onRejected, onProgress) {
+  var applies = {
+    onFulfilled: onFulfilled,
+    onRejected: onRejected,
+    onProgress: onProgress
   };
+  this.thenApplies.push(applies);
 
-  httpConfigurable.contentType = function(mimeType) {
-    return this.header('Content-Type', mimeType);
-  };
+  return this;
+};
 
-  httpConfigurable.accepts = function(mimeType) {
-    return this.header('Accepts', mimeType);
-  };
-
-  httpConfigurable.thenApply = function(onFulfilled, onRejected, onProgress) {
-    var applies = {
-      onFulfilled: onFulfilled,
-      onRejected: onRejected,
-      onProgress: onProgress
-    };
-    this.thenApplies.push(applies);
-
-    return this;
-  };
-
-  return httpConfigurable;
+httpConfigurable.mergeThenApplies = function(_thenApplies) {
+  _.extend(this.thenApplies, _thenApplies);
 };
 
 
-module.exports = newHttpConfigurable;
+module.exports = httpConfigurable;

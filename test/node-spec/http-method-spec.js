@@ -26,7 +26,6 @@ describe('method factory', function() {
   });
 
   it('returns itself after calls to header', function() {
-    console.log(method);
     method.header('some', 'header')
     .should.equal(method);
   });

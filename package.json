@@ -51,6 +51,7 @@
     "q": "1.x.x",
     "qagent": "0.0.1",
     "superagent": "0.18.x",
-    "requestadapter": "0.0.4"
+    "requestadapter": "0.0.4",
+    "superagent-browserify": "0.0.2"
   }
 }

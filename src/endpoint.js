@@ -16,8 +16,7 @@ function Endpoint(pattern) {
     return value;
   };
 
-  _.extend(this, httpConfigurable());
-
+  this.initHttpConfigurable();
   this.thenApply(requestAdapter, passThroughError, passThrough);
   pattern = pattern || '';
   pattern  = this.removeLeadingSlash(pattern);
@@ -44,9 +43,11 @@ Endpoint.prototype.methods = function(methodList){
   }
 
   _.each(methodList, function(method){
-    this[method] = httpMethodHelper(method, this);
 
-    _.extend(this[method], httpConfigurable());
+    this[method] = httpMethodHelper(method, this);
+    _.extend(this[method], httpConfigurable);
+    this[method].initHttpConfigurable();
+
   }, this);
 
   return this;
@@ -75,5 +76,7 @@ Endpoint.prototype.removeLeadingSlash = function(string) {
 
   return string;
 };
+
+_.extend(Endpoint.prototype, httpConfigurable);
 
 module.exports = Endpoint;
