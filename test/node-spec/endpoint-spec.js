@@ -147,7 +147,7 @@ describe('endpoints', function() {
     });
   });
 
-  describe('rejects the promise on errors', function() {
+  describe('promise rejection', function() {
     beforeEach(function() {
       var endpoint = Endpoints.create()
         .methods('get')
@@ -157,7 +157,7 @@ describe('endpoints', function() {
         .send();
     });
 
-    it('permutes the promise with a specified permutation', function(done) {
+    it('rejects promises on errors', function(done) {
       promise
       .should.eventually.be.rejectedWith('connect ECONNREFUSED')
       .notify(done);
