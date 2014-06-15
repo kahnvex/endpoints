@@ -232,7 +232,7 @@ describe('endpoints', function() {
       .get('from')
       .should.eventually.equal('fake@email.com')
       .notify(done);
-    })
+    });
   });
 
   describe('setting per method object headers', function() {
@@ -248,7 +248,7 @@ describe('endpoints', function() {
       endpoint.get
       .accept('application/xml')
       .contentType('application/json')
-      .header('from', 'fake@email.com')
+      .header('from', 'fake@email.com');
 
       promise = endpoint
         .get()
@@ -283,7 +283,7 @@ describe('endpoints', function() {
       .get('from')
       .should.eventually.equal('fake@email.com')
       .notify(done);
-    })
+    });
   });
 
   describe('setting per method instance headers', function() {
@@ -330,6 +330,6 @@ describe('endpoints', function() {
       .get('from')
       .should.eventually.equal('fake@email.com')
       .notify(done);
-    })
+    });
   });
 });
