@@ -1,6 +1,7 @@
 'use strict';
 
 var Method = require('./http-method');
+var _ = require('lodash');
 
 
 var methodHelper = function(methodString, endpoint) {
@@ -12,8 +13,11 @@ var methodHelper = function(methodString, endpoint) {
     var thenApplies = endpoint.thenApplies.concat(
       endpoint[methodString].thenApplies);
 
+    var headers = _.extend({}, endpoint.headers,
+      endpoint[methodString].headers);
+
     var endpointConfig = {
-      headers: endpoint.headers,
+      headers: headers,
       thenApplies: thenApplies,
       domain: endpoint.getDomain(),
       pattern: endpoint.getPattern(),

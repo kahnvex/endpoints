@@ -235,7 +235,58 @@ describe('endpoints', function() {
     })
   });
 
-  describe('setting per method headers', function() {
+  describe('setting per method object headers', function() {
+    var promise;
+
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint')
+        .methods('get')
+        .domain('http://localhost:9000');
+
+      mock.get('/endpoint').reply(200);
+
+      endpoint.get
+      .accept('application/xml')
+      .contentType('application/json')
+      .header('from', 'fake@email.com')
+
+      promise = endpoint
+        .get()
+        .send();
+    });
+
+    it('sets the accept header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('accept')
+      .should.eventually.equal('application/xml')
+      .notify(done);
+    });
+
+    it('sets the Content Type header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('content-type')
+      .should.eventually.equal('application/json')
+      .notify(done);
+    });
+
+    it('sets other request header fields from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('from')
+      .should.eventually.equal('fake@email.com')
+      .notify(done);
+    })
+  });
+
+  describe('setting per method instance headers', function() {
     var promise;
 
     beforeEach(function() {
