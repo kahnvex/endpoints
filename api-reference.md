@@ -349,7 +349,7 @@ var userEndpoint = Endpoints.create('api/users/[user-id]')
 
 Let's now think of an imaginary use case. Say we need to delete a user
 if they're expired attributes is `true`. The user object also has a
-property username.
+property `username`, and we know the user's ID.
 
 ```javascript
 var userId = 1234;
@@ -371,5 +371,5 @@ userEndpoint
 .param('user-id', userId)
 .send()
 .get('expired')
-.then(deleteUser);
+.done(deleteUser);
 ```
