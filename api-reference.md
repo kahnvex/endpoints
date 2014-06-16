@@ -348,7 +348,7 @@ var userEndpoint = Endpoints.create('api/users/[user-id]')
 ### Using a Complex Endpoint
 
 Let's now think of an imaginary use case. Say we need to delete a user
-if they're expired attributes is `true`. The user object also has a
+if their expired attributes is `true`. The user object also has a
 property `username`, and we know the user's ID.
 
 ```javascript
