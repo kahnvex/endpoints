@@ -4,7 +4,7 @@
   "description": "Simple library for HTTP service clients",
   "main": "src/index.js",
   "scripts": {
-    "test": "karam start"
+    "test": "gulp nodespec"
   },
   "repository": {
     "type": "git",
