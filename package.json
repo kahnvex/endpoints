@@ -33,7 +33,6 @@
     "karma-mocha": "0.1.x",
     "karma-phantomjs-launcher": "0.1.x",
     "karma-cli": "0.0.x",
-    "lodash": "2.4.x",
     "gulp": "3.7.x",
     "vinyl-source-stream": "0.1.1",
     "gulp-size": "0.3.1",
@@ -49,6 +48,7 @@
   },
   "dependencies": {
     "q": "1.x.x",
+    "lodash": "2.4.x",
     "qagent": "0.0.1",
     "superagent": "0.18.x",
     "requestadapter": "0.0.4"
