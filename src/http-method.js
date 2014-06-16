@@ -3,32 +3,22 @@
 var _ = require('lodash');
 var agentQ = require('qagent');
 var request = require('superagent');
+var httpConfigurable = require('./http-configurable');
 
 
 function Method(method, endpointConfig) {
+  var thenApplies = endpointConfig.thenApplies || [];
+
+  this.initHttpConfigurable();
+  this.mergeThenApplies(thenApplies);
   this.params = {};
   this.method = method;
   this.headers = endpointConfig.headers || {};
-  this.thenApplies = endpointConfig.thenApplies || [];
   this.domain = endpointConfig.domain || '';
   this.pattern = endpointConfig.pattern || '/';
 
   return this;
 }
-
-Method.prototype.header = function(headerKey, headerValue) {
-  this.headers[headerKey] = headerValue;
-
-  return this;
-};
-
-Method.prototype.contentType = function(mimeType) {
-  return this.header('Content-Type', mimeType);
-};
-
-Method.prototype.accepts = function(mimeType) {
-  return this.header('Accepts', mimeType);
-};
 
 Method.prototype.param = function(key, value) {
   this.params[key] = value;
@@ -75,18 +65,6 @@ Method.prototype.query = function(query) {
   return this;
 };
 
-Method.prototype.thenApply = function(onFulfilled, onRejected, onProgress) {
-  var thenApply = {
-    onFulfilled: onFulfilled,
-    onRejected: onRejected,
-    onProgress: onProgress
-  };
-
-  this.thenApplies.push(thenApply);
-
-  return this;
-};
-
 Method.prototype.send = function() {
   var requestObject = this.createRequestObject();
 
@@ -121,5 +99,8 @@ Method.prototype.createRequestObject = function() {
 
   return requestObject;
 };
+
+_.extend(Method.prototype, httpConfigurable);
+
 
 module.exports = Method;

@@ -12,6 +12,40 @@ chai.use(chaiAsPromised);
 describe('endpoints', function() {
   var promise;
 
+  describe('interface layout', function() {
+    var endpoint = Endpoints.create();
+
+    it('endpoint.header returns the endpoint', function() {
+      endpoint.header('key', 'val')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.domain returns the endpoint', function() {
+      endpoint.domain('domain')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.contentType returns the endpoint', function() {
+      endpoint.contentType('json')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.accept returns the endpoint', function() {
+      endpoint.accept('xml')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.pattern returns the endpoint', function() {
+      endpoint.pattern('/url')
+      .should.equal(endpoint);
+    });
+
+    it('endpoint.methods returns the endpoint', function() {
+      endpoint.methods('get')
+      .should.equal(endpoint);
+    });
+  });
+
   describe('bare bones behavior', function() {
     beforeEach(function() {
       var endpoint = Endpoints.create()
@@ -113,7 +147,7 @@ describe('endpoints', function() {
     });
   });
 
-  describe('rejects the promise on errors', function() {
+  describe('promise rejection', function() {
     beforeEach(function() {
       var endpoint = Endpoints.create()
         .methods('get')
@@ -123,7 +157,7 @@ describe('endpoints', function() {
         .send();
     });
 
-    it('permutes the promise with a specified permutation', function(done) {
+    it('rejects promises on errors', function(done) {
       promise
       .should.eventually.be.rejectedWith('connect ECONNREFUSED')
       .notify(done);
@@ -150,6 +184,151 @@ describe('endpoints', function() {
       promise
       .invoke('status')
       .should.eventually.equal(200)
+      .notify(done);
+    });
+  });
+
+  describe('setting endpoint headers', function() {
+    var promise;
+
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint')
+        .methods('get')
+        .accept('application/xml')
+        .contentType('application/json')
+        .header('from', 'fake@email.com')
+        .domain('http://localhost:9000');
+
+      mock.get('/endpoint').reply(200);
+      promise = endpoint.get()
+        .send();
+    });
+
+    it('sets the accept header from the endpoint', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('accept')
+      .should.eventually.equal('application/xml')
+      .notify(done);
+    });
+
+    it('sets the Content Type header from the endpoint', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('content-type')
+      .should.eventually.equal('application/json')
+      .notify(done);
+    });
+
+    it('sets other request header fields from the endpoint', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('from')
+      .should.eventually.equal('fake@email.com')
+      .notify(done);
+    });
+  });
+
+  describe('setting per method object headers', function() {
+    var promise;
+
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint')
+        .methods('get')
+        .domain('http://localhost:9000');
+
+      mock.get('/endpoint').reply(200);
+
+      endpoint.get
+      .accept('application/xml')
+      .contentType('application/json')
+      .header('from', 'fake@email.com');
+
+      promise = endpoint
+        .get()
+        .send();
+    });
+
+    it('sets the accept header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('accept')
+      .should.eventually.equal('application/xml')
+      .notify(done);
+    });
+
+    it('sets the Content Type header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('content-type')
+      .should.eventually.equal('application/json')
+      .notify(done);
+    });
+
+    it('sets other request header fields from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('from')
+      .should.eventually.equal('fake@email.com')
+      .notify(done);
+    });
+  });
+
+  describe('setting per method instance headers', function() {
+    var promise;
+
+    beforeEach(function() {
+      var endpoint = Endpoints.create('/endpoint')
+        .methods('get')
+        .domain('http://localhost:9000');
+
+      mock.get('/endpoint').reply(200);
+      promise = endpoint.get()
+        .accept('application/xml')
+        .contentType('application/json')
+        .header('from', 'fake@email.com')
+        .send();
+    });
+
+    it('sets the accept header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('accept')
+      .should.eventually.equal('application/xml')
+      .notify(done);
+    });
+
+    it('sets the Content Type header from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('content-type')
+      .should.eventually.equal('application/json')
+      .notify(done);
+    });
+
+    it('sets other request header fields from a method', function(done) {
+      promise
+      .invoke('rawRequestResponse')
+      .get('req')
+      .get('_headers')
+      .get('from')
+      .should.eventually.equal('fake@email.com')
       .notify(done);
     });
   });
