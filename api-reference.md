@@ -250,7 +250,7 @@ Makes the request and returns a [Q Promise](https://github.com/kriskowal/q).
 
 ## Putting it all Together
 
-#### Creating a Simple Endpoint
+### Creating a Simple Endpoint
 
 Let's assume there is an endpoint at `/api/users` that takes two methods: `get`
 and `post`. It will serialize to multiple data formats and expects the
