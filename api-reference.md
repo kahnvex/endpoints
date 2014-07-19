@@ -52,24 +52,26 @@ Sugar method for `endpoint.header('Content-Type', mimeType)`
 
 Sugar method for `endpoint.header('Accepts', mimeType)`
 
-### endpoint.thenApply(onFullfilled, onError, onProgress)
+### endpoint.then(onFullfilled, onError, onProgress)
+
+Alias: `thenApply`
 
 Adds a function to permute all request promises. This will be applied to every
 request promise ahead of time by calling
 `promise.then(onFullfilled, onError, onProgress)`. The endpoint will aggregate
-all permutations passed to `thenApply` and apply them in succession. Read up on
+all permutations passed to `then` and apply them in succession. Read up on
 [Promises/A+](http://promises-aplus.github.io/promises-spec/),
 [Q's Promise implementation](https://github.com/kriskowal/q), and
 [Q's API Reference](https://github.com/kriskowal/q/wiki/API-Reference).
 Returns the endpoint.
 
 ```javascript
-endpoint.thenApply(onFullfilled, onError, onProgres);
+endpoint.then(onFullfilled, onError, onProgres);
 ```
 
 This is useful if you know that you always want to permute a request promise in a
 certain way. If you are only interested in the body of the response, you might
-use `thenApply` to permute the promise to only give you the body, like this:
+use `then` to permute the promise to only give you the body, like this:
 
 ```javascript
 var getBody = function(requestAdapter) {
@@ -78,7 +80,7 @@ var getBody = function(requestAdapter) {
 var passError = function(error) {
   throw error;
 };
-endpoint.thenApply(getBody, passError);
+endpoint.then(getBody, passError);
 
 // Now the endpoint can be used in a way that assumes the response object
 // is always passed to the onFullfilled function.
@@ -88,10 +90,10 @@ endpoint
 .done(console.log);
 ```
 
-`thenApply` may also be called on a method, like this:
+`then` may also be called on a method, like this:
 
 ```
-endpoint.post.thenApply(onFullfilled, onError, onProgres);
+endpoint.post.then(onFullfilled, onError, onProgres);
 ```
 
 This allows permutations specific to an HTTP method. `thenApplies` are ordered
@@ -101,11 +103,11 @@ that endpoint.
 
 ## HTTP Method Interface
 
-### endpoint.method.thenApply(onFullfilled, onError, onProgress)
+### endpoint.method.then(onFullfilled, onError, onProgress)
 
 Where method is one of `get`, `put`, `post`, `delete`, etc.
 
-Same as `endpoint.thenApply()` but specific to that method.
+Same as `endpoint.then()` but specific to that method.
 
 Returns the `method` object.
 
@@ -236,12 +238,12 @@ Sugar method for `method.header('Content-Type', mimeType)`.
 
 Sugar method for `method.header('Accepts', mimeType)`
 
-### method.thenApply(onFullfilled, onError, onProgress)
+### method.then(onFullfilled, onError, onProgress)
 
 Add a function to permute the request promise. This will apply `promise.then(onFullfilled, onError, onProgress)` to the request promise before it is returned to you. Read up on [Promises/A+](http://promises-aplus.github.io/promises-spec/), [Q's Promise implementation](https://github.com/kriskowal/q), and [Q's API Reference](https://github.com/kriskowal/q/wiki/API-Reference).
 
 ```javascript
-method.thenApply(onFullfilled, onError, onProgres);
+method.then(onFullfilled, onError, onProgres);
 ```
 
 ### method.send()
@@ -275,7 +277,7 @@ var getUserList = function(requestAdapter) {
   return requestAdapter.responseObject();
 };
 
-usersEndpoint.thenApply(getUserList);
+usersEndpoint.then(getUserList);
 ```
 
 Or if the endpoint only responds with the user list on `get` requests we can
@@ -286,7 +288,7 @@ var getUserList = function(requestAdapter) {
   return requestAdapter.responseObject();
 };
 
-usersEndpoint.get.thenApply(getUserList);
+usersEndpoint.get.then(getUserList);
 ```
 
 ### Make a Request
@@ -341,8 +343,8 @@ var userEndpoint = Endpoints.create('api/users/[user-id]')
   .methods(['get', 'put', 'delete'])
   .accets('application/json')
   .contentType('application/json')
-  .thenApply(twoHundredsOrThrow)
-  .thenApply(getUserObject);
+  .then(twoHundredsOrThrow)
+  .then(getUserObject);
 ```
 
 ### Using a Complex Endpoint
