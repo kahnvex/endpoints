@@ -1,5 +1,18 @@
 # [Changelog](https://github.com/kahnjw/endpoints/releases)
 
+## 0.3.4
+
+* Change endpoint.thenApply to endpoint.then
+* Keep alias endpoint.thenApply
+
+## 0.3.3
+
+* Update API reference to npm
+
+## 0.3.2
+
+* Allow headers to be set from method object
+
 ## 0.3.1
 
 * Add sugar method Endpoint.contentType
