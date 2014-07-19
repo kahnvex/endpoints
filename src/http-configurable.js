@@ -24,7 +24,7 @@ httpConfigurable.accept = function(mimeType) {
   return this.header('Accept', mimeType);
 };
 
-httpConfigurable.thenApply = function(onFulfilled, onRejected, onProgress) {
+httpConfigurable.then = function(onFulfilled, onRejected, onProgress) {
   var applies = {
     onFulfilled: onFulfilled,
     onRejected: onRejected,
@@ -34,6 +34,8 @@ httpConfigurable.thenApply = function(onFulfilled, onRejected, onProgress) {
 
   return this;
 };
+
+httpConfigurable.thenApply = httpConfigurable.then;
 
 httpConfigurable.mergeThenApplies = function(_thenApplies) {
   _.extend(this.thenApplies, _thenApplies);
