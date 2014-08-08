@@ -13,7 +13,7 @@ View the [Endpoints API Reference](https://github.com/kahnjw/endpoints/blob/mast
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myEndpoint = new Endpoints.create('/some/url/pattern')
+var myEndpoint = Endpoints.create('/some/url/pattern')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
@@ -36,11 +36,13 @@ Use Endpoints to create an endpoint pattern, then call methods on that pattern a
 ```javascript
 var Endpoints = require('endpointsjs');
 
-var myEndpoint = new Endpoints.create('/some/url/pattern')
+var myEndpoint = Endpoints
+  .create('/some/url/pattern')
   .header('Content-Type', 'application/json')
   .methods(['get', 'post']);
 
-var promise = myEndpoint.get()
+var promise = myEndpoint
+  .get()
   .send(); // Returns an Q Promise (Promises/A+)
 
 // You can do something like this
@@ -61,23 +63,25 @@ promise
 Sending data to the server is also easy
 
 ```javascript
-var myOtherEndpoint = new Endpoints.create('/some/other/url/pattern')
+var myOtherEndpoint = Endpoints.create('/some/other/url/pattern')
   .methods(['options', 'post', 'delete']);
 
 myOtherEndpoint.post()
   .data({myData: 123})
   .send()
   ...
-  done();
+  .done();
 ```
 
 It is also possible to build a URL by passing arguments
 
 ```javascript
-var myOtherEndpoint = new Endpoints.create('/users/[userId]-[username]')
+var myOtherEndpoint = Endpoints
+  .create('/users/[userId]-[username]')
   .methods('get');
 
-myOtherEndpoint.post()
+myOtherEndpoint
+  .post()
   .param('userId', 123)
   .param('username', 'kahnjw')
   .send() // GETs the URL: /users/123-kahnjw
