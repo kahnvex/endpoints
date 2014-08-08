@@ -1,5 +1,9 @@
 # [Changelog](https://github.com/kahnjw/endpoints/releases)
 
+## 0.3.5
+
+* README.md fix
+
 ## 0.3.4
 
 * Change endpoint.thenApply to endpoint.then
