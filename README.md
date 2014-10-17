@@ -1,7 +1,7 @@
 Endpoints
 =========
 
-[![Build Status](https://travis-ci.org/kahnjw/endpoints.png)](https://travis-ci.org/kahnjw/endpoints)
+[![Build Status](https://travis-ci.org/sweatshirtio/endpoints.png)](https://travis-ci.org/sweatshirtio/endpoints)
 
 Simple helper library for HTTP service clients. Endpoints works in the browser
 and in Node, using [RequestAdapter](https://github.com/kahnjw/RequestAdapter/) to expose a common interface for Request Response objects, and [superagent](https://github.com/visionmedia/superagent) for Node and browser AJAX.
